@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journey Solutions — Website UI Kit</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="logo-uris.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body, #root { height: 100%; }
+  body { background: #FAF7F2; font-family: 'Lora', serif; overflow: hidden; }
+  [data-lucide] { display: block; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+/* ── SIDENAV ── */
+const SideNav = ({ currentPage, onNavigate }) => {
+  const navItems = [
+    { id: 'main',    icon: 'home',     label: 'Main' },
+    { id: 'about',   icon: 'user',     label: 'About Me' },
+    { id: 'apps',    icon: 'grid-2x2', label: 'Apps' },
+    { id: 'contact', icon: 'mail',     label: 'Contact' },
+  ];
+  return (
+    <nav style={snS.nav}>
+        <div style={snS.logoWrap} dangerouslySetInnerHTML={{__html: window.LOGO_AMBER_SVG}} />
+      <div style={snS.items}>
+        {navItems.map(item => {
+          const active = currentPage === item.id;
+          return (
+            <button key={item.id} onClick={() => onNavigate(item.id)}
+              style={{...snS.item, ...(active ? snS.itemActive : {})}}>
+              <div style={{...snS.circle, ...(active ? snS.circleActive : snS.circleDefault)}}>
+                <i data-lucide={item.icon} style={{...snS.icon, stroke: '#EA8724'}}></i>
+              </div>
+              <span style={{...snS.label, ...(active ? snS.labelActive : {})}}>{item.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </nav>
+  );
+};
+const snS = {
+  nav: { width:'96px', minHeight:'100vh', background:'#FFFFFF', borderRight:'1px solid #E2D8CC', display:'flex', flexDirection:'column', alignItems:'center', paddingTop:'16px', paddingBottom:'24px', flexShrink:0, position:'sticky', top:0, height:'100vh', boxShadow:'2px 0 8px rgba(84,6,8,0.04)' },
+  logoWrap: { width:'80px', display:'block', marginBottom:'20px', flexShrink:0 },
+  logo: { width:'80px', height:'auto', display:'block' },
+  items: { display:'flex', flexDirection:'column', gap:'4px', width:'100%', alignItems:'center' },
+  item: { display:'flex', flexDirection:'column', alignItems:'center', gap:'5px', background:'none', border:'none', cursor:'pointer', padding:'10px 8px', borderRadius:'10px', width:'84px', transition:'background 0.15s' },
+  itemActive: { background:'#FAF0F0' },
+  circle: { width:'48px', height:'48px', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', transition:'background 0.15s' },
+  circleDefault: { background:'#540608' },
+  circleActive: { background:'#540608' },
+  icon: { width:'20px', height:'20px', strokeWidth:'1.75', display:'block' },
+  label: { fontFamily:"'Oswald', sans-serif", fontSize:'10px', letterSpacing:'0.1em', textTransform:'uppercase', color:'#782121', textAlign:'center', lineHeight:1.2 },
+  labelActive: { color:'#EA8724', fontWeight:'600' },
+};
+
+/* ── APP CARD ── */
+const AppCard = ({ icon, category, title, description, tag, tagColor, onClick }) => {
+  const [hovered, setHovered] = React.useState(false);
+  return (
+    <div onClick={onClick} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{...acS.card, ...(hovered ? acS.cardHover : {}), cursor: onClick ? 'pointer' : 'default'}}>
+      <div style={{...acS.iconWrap, background: tagColor === 'amber' ? '#EA8724' : '#540608'}}>
+        <i data-lucide={icon} style={{...acS.icon, stroke: tagColor === 'amber' ? '#540608' : '#EA8724'}}></i>
+      </div>
+      <div style={acS.category}>{category}</div>
+      <div style={acS.title}>{title}</div>
+      <div style={acS.desc}>{description}</div>
+      <div style={acS.footer}>
+        <span style={acS.learnMore}>Learn More <i data-lucide="arrow-right" style={acS.arrowIcon}></i></span>
+        {tag && <span style={{...acS.tag, background: tag==='New'?'#FCECD0':tag==='Coming Soon'?'#F2DADA':'#F2DADA', color: tag==='New'?'#8C4E00':'#540608'}}>{tag}</span>}
+      </div>
+    </div>
+  );
+};
+const acS = {
+  card: { background:'#FFFFFF', borderRadius:'12px', boxShadow:'0 2px 12px rgba(84,6,8,0.07)', border:'1px solid #E2D8CC', padding:'22px', display:'flex', flexDirection:'column', transition:'box-shadow 0.2s, transform 0.2s' },
+  cardHover: { boxShadow:'0 6px 28px rgba(84,6,8,0.14)', transform:'translateY(-2px)' },
+  iconWrap: { width:'44px', height:'44px', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:'12px', flexShrink:0 },
+  icon: { width:'20px', height:'20px', strokeWidth:'1.75', display:'block' },
+  category: { fontFamily:"'Oswald', sans-serif", fontSize:'10px', letterSpacing:'0.1em', textTransform:'uppercase', color:'#A99080', marginBottom:'3px' },
+  title: { fontFamily:"'Oswald', sans-serif", fontSize:'18px', fontWeight:'700', letterSpacing:'0.04em', textTransform:'uppercase', color:'#540608', lineHeight:'1.15', marginBottom:'8px' },
+  desc: { fontFamily:"'Lora', serif", fontSize:'13px', color:'#6B5744', lineHeight:'1.65', marginBottom:'14px', flex:1 },
+  footer: { display:'flex', alignItems:'center', justifyContent:'space-between', marginTop:'auto' },
+  learnMore: { display:'inline-flex', alignItems:'center', gap:'5px', fontFamily:"'Oswald', sans-serif", fontSize:'11px', fontWeight:'600', letterSpacing:'0.08em', textTransform:'uppercase', color:'#C97200', cursor:'pointer' },
+  arrowIcon: { width:'13px', height:'13px', stroke:'#C97200', strokeWidth:'2', display:'block' },
+  tag: { display:'inline-block', padding:'2px 8px', borderRadius:'4px', fontFamily:"'Oswald', sans-serif", fontSize:'9px', letterSpacing:'0.08em', textTransform:'uppercase', fontWeight:'600' },
+};
+
+/* ── HERO ── */
+const HeroSection = ({ onNavigate }) => (
+  <div style={hS.wrap}>
+    <div style={hS.hero}>
+      <div style={hS.heroInner}>
+        <span style={hS.eyebrow}>Welcome</span>
+        <h1 style={hS.h1}>Apps Built<br/>From Real Life</h1>
+        <p style={hS.lead}>I'm a solo developer who builds simple, honest apps — tools I wished existed. No bloat, no subscriptions. Just things that work.</p>
+        <div style={hS.btns}>
+          <button style={hS.btnPrimary} onClick={() => onNavigate('apps')}>Browse My Apps</button>
+          <button style={hS.btnGhost} onClick={() => onNavigate('about')}>My Story</button>
+        </div>
+      </div>
+      <div style={hS.heroArt}>
+        <div style={hS.spiralWrap}>
+          <div dangerouslySetInnerHTML={{__html: window.LOGO_BURG_SVG}} style={{ width:'100%' }} />
+        </div>
+      </div>
+    </div>
+    <div style={hS.strip}>
+      <div style={hS.stripLabel}>Featured Apps</div>
+      <div style={hS.stripCards}>
+        {[
+          { icon:'wind',        category:'Meditation', title:'Still',           description:'A gentle habit starter for daily meditation. Build a practice that actually sticks.', tag:'Free', tagColor:null },
+          { icon:'credit-card', category:'Finance',    title:'Payment Tracker', description:'Track loan payments with clarity. See what you owe, what you\'ve paid, and when you\'ll be done.', tag:'Free', tagColor:null },
+          { icon:'tent',        category:'Events',     title:'Rally Manager',   description:'Manage registrations for camping events and rallies — without the spreadsheet chaos.', tag:'Free', tagColor:null },
+        ].map((app, i) => <AppCard key={i} {...app} onClick={() => onNavigate('appdetail')} />)}
+      </div>
+    </div>
+  </div>
+);
+const hS = {
+  wrap: { display:'flex', flexDirection:'column' },
+  hero: { display:'flex', alignItems:'center', gap:'40px', padding:'60px 48px 48px', minHeight:'380px' },
+  heroInner: { flex:1, maxWidth:'520px' },
+  eyebrow: { fontFamily:"'Oswald', sans-serif", fontSize:'12px', letterSpacing:'0.2em', textTransform:'uppercase', color:'#EA8724', display:'block', marginBottom:'10px' },
+  h1: { fontFamily:"'Oswald', sans-serif", fontSize:'52px', fontWeight:'700', textTransform:'uppercase', letterSpacing:'0.04em', color:'#540608', lineHeight:'1.05', marginBottom:'18px' },
+  lead: { fontFamily:"'Lora', serif", fontSize:'17px', color:'#6B5744', lineHeight:'1.7', marginBottom:'28px', maxWidth:'440px' },
+  btns: { display:'flex', gap:'12px', flexWrap:'wrap' },
+  btnPrimary: { padding:'12px 28px', background:'#540608', color:'#EA8724', border:'none', borderRadius:'8px', fontFamily:"'Oswald', sans-serif", fontSize:'13px', fontWeight:'600', letterSpacing:'0.1em', textTransform:'uppercase', cursor:'pointer' },
+  btnGhost: { padding:'11px 28px', background:'transparent', color:'#782121', border:'1.5px solid #782121', borderRadius:'8px', fontFamily:"'Oswald', sans-serif", fontSize:'13px', fontWeight:'600', letterSpacing:'0.1em', textTransform:'uppercase', cursor:'pointer' },
+  heroArt: { flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center' },
+  spiralWrap: { width:'200px', borderRadius:'20px', background:'transparent', boxShadow:'none', flexShrink:0, overflow:'hidden', padding:'16px' },
+  spiralImg: { width:'220px' },
+  strip: { borderTop:'1px solid #E2D8CC', padding:'32px 48px 48px', background:'#FFFFFF' },
+  stripLabel: { fontFamily:"'Oswald', sans-serif", fontSize:'11px', letterSpacing:'0.15em', textTransform:'uppercase', color:'#A99080', marginBottom:'20px' },
+  stripCards: { display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:'16px' },
+};
+
+/* ── ABOUT ── */
+const AboutSection = () => (
+  <div style={abS.wrap}>
+    <div style={abS.header}>
+      <span style={abS.eyebrow}>About Me</span>
+      <h1 style={abS.h1}>Here's My Story</h1>
+    </div>
+    <div style={abS.body}>
+      <div style={abS.photoCol}>
+        <div style={abS.photoPlaceholder}>
+          <i data-lucide="user" style={{ width:'48px', height:'48px', stroke:'#EA8724', strokeWidth:'1.25', display:'block' }}></i>
+        </div>
+        <div style={abS.photoCaption}>Journey Solutions Founder</div>
+        <div style={abS.statRow}>
+          <div style={abS.stat}><span style={abS.statNum}>3</span><span style={abS.statLabel}>Apps Built</span></div>
+          <div style={abS.stat}><span style={abS.statNum}>Growing</span><span style={abS.statLabel}>Catalog</span></div>
+        </div>
+      </div>
+      <div style={abS.textCol}>
+        <p style={abS.p}>I didn't start out as a developer. I started out as someone who couldn't find the tools I needed — so I learned to build them myself.</p>
+        <p style={abS.p}>Every app in this collection grew out of a real problem I faced. Still came from wanting a simpler way to build a meditation habit. Payment Tracker from needing to see loan progress at a glance. Rally Manager from organizing camping events and drowning in spreadsheets.</p>
+        <p style={abS.p}>I believe software should be simple, honest, and respectful of your time. No dark patterns, no endless feature bloat, no subscription traps.</p>
+        <blockquote style={abS.quote}>"I read every message and feature request. This isn't a faceless product — it's something I'm genuinely proud of."</blockquote>
+        <p style={abS.p}>Thanks for stopping by. I hope something here makes your day a little easier.</p>
+      </div>
+    </div>
+  </div>
+);
+const abS = {
+  wrap: { padding:'52px 48px' },
+  header: { marginBottom:'40px' },
+  eyebrow: { fontFamily:"'Oswald', sans-serif", fontSize:'12px', letterSpacing:'0.2em', textTransform:'uppercase', color:'#EA8724', display:'block', marginBottom:'8px' },
+  h1: { fontFamily:"'Oswald', sans-serif", fontSize:'46px', fontWeight:'700', textTransform:'uppercase', letterSpacing:'0.04em', color:'#540608', lineHeight:'1.05' },
+  body: { display:'flex', gap:'48px', alignItems:'flex-start' },
+  photoCol: { flexShrink:0, width:'180px', display:'flex', flexDirection:'column', alignItems:'center', gap:'12px' },
+  photoPlaceholder: { width:'160px', height:'160px', borderRadius:'50%', background:'#540608', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 4px 20px rgba(84,6,8,0.15)' },
+  photoCaption: { fontFamily:"'Oswald', sans-serif", fontSize:'10px', letterSpacing:'0.1em', textTransform:'uppercase', color:'#A99080', textAlign:'center' },
+  statRow: { display:'flex', gap:'16px', marginTop:'4px' },
+  stat: { display:'flex', flexDirection:'column', alignItems:'center' },
+  statNum: { fontFamily:"'Oswald', sans-serif", fontSize:'22px', fontWeight:'700', color:'#540608' },
+  statLabel: { fontFamily:"'Oswald', sans-serif", fontSize:'9px', letterSpacing:'0.1em', textTransform:'uppercase', color:'#A99080' },
+  textCol: { flex:1, maxWidth:'520px', display:'flex', flexDirection:'column', gap:'16px' },
+  p: { fontFamily:"'Lora', serif", fontSize:'15px', color:'#1A1008', lineHeight:'1.75' },
+  quote: { fontFamily:"'Lora', serif", fontStyle:'italic', fontSize:'16px', color:'#6B5744', lineHeight:'1.65', borderLeft:'3px solid #EA8724', paddingLeft:'16px', margin:'4px 0' },
+};
+
+/* ── APPS ── */
+const APPS_DATA = [
+  { icon:'wind',        category:'Meditation', title:'Still',           description:'A gentle habit starter for daily meditation. Build a practice that actually sticks — one quiet moment at a time.', tag:'Free', tagColor:null },
+  { icon:'credit-card', category:'Finance',    title:'Payment Tracker', description:'Track loan payments with clarity. See what you owe, what you\'ve paid, and when you\'ll be done.', tag:'Free', tagColor:null },
+  { icon:'tent',        category:'Events',     title:'Rally Manager',   description:'Manage registrations for camping events and rallies. Keep attendees organized without the spreadsheet chaos.', tag:'Free', tagColor:null },
+];
+const AppsSection = ({ onNavigate }) => (
+  <div style={apS.wrap}>
+    <div style={apS.header}>
+      <span style={apS.eyebrow}>All Apps</span>
+      <h1 style={apS.h1}>My App Collection</h1>
+      <p style={apS.lead}>Each app started as a personal problem. Hopefully one of them solves yours.</p>
+    </div>
+    <div style={apS.grid}>
+      {APPS_DATA.map((app, i) => <AppCard key={i} {...app} onClick={() => onNavigate('appdetail')} />)}
+    </div>
+  </div>
+);
+const apS = {
+  wrap: { padding:'52px 48px' },
+  header: { marginBottom:'36px' },
+  eyebrow: { fontFamily:"'Oswald', sans-serif", fontSize:'12px', letterSpacing:'0.2em', textTransform:'uppercase', color:'#EA8724', display:'block', marginBottom:'8px' },
+  h1: { fontFamily:"'Oswald', sans-serif", fontSize:'46px', fontWeight:'700', textTransform:'uppercase', letterSpacing:'0.04em', color:'#540608', lineHeight:'1.05', marginBottom:'12px' },
+  lead: { fontFamily:"'Lora', serif", fontSize:'16px', color:'#6B5744', lineHeight:'1.65', maxWidth:'480px' },
+  grid: { display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:'18px' },
+};
+
+/* ── APP DETAIL ── */
+const AppDetail = ({ onNavigate }) => {
+  const [formState, setFormState] = React.useState({ name:'', email:'', feedback:'', submitted:false });
+  return (
+    <div style={adS.wrap}>
+      <button style={adS.back} onClick={() => onNavigate('apps')}>
+        <i data-lucide="arrow-left" style={{ width:'14px', height:'14px', stroke:'#C97200', strokeWidth:'2', display:'block' }}></i>
+        Back to Apps
+      </button>
+      <div style={adS.hero}>
+        <div style={adS.heroIcon}>
+          <i data-lucide="wind" style={{ width:'36px', height:'36px', stroke:'#EA8724', strokeWidth:'1.5', display:'block' }}></i>
+        </div>
+        <div>
+          <span style={adS.category}>Meditation</span>
+          <h1 style={adS.title}>Still</h1>
+          <div style={adS.tagRow}>
+            <span style={adS.tagFree}>Free</span>
+          </div>
+        </div>
+      </div>
+      <p style={adS.desc}>A gentle habit starter for daily meditation. Still was built for anyone who's tried to meditate and given up — because most apps make it too complicated. This one just asks you to show up.</p>
+      <div style={adS.divider}></div>
+      <div style={adS.howto}>
+        <h2 style={adS.h2}>How to Use</h2>
+        <ol style={adS.steps}>
+          {['Open the app and choose your session length — even 2 minutes counts.','Tap Start and follow the gentle audio cues.','After each session, mark it complete to build your streak.','Review your history in the Calendar view.','Adjust reminders in Settings to fit your schedule.'].map((step, i) => (
+            <li key={i} style={adS.step}>
+              <span style={adS.stepNum}>{i+1}</span>
+              <span style={adS.stepText}>{step}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <div style={adS.divider}></div>
+      <div>
+        <h2 style={adS.h2}>Feedback & Feature Requests</h2>
+        <p style={adS.feedbackIntro}>Have an idea? Found a bug? I read every message.</p>
+        {formState.submitted ? (
+          <div style={adS.successMsg}>
+            <i data-lucide="check-circle" style={{ width:'20px', height:'20px', stroke:'#3A7D44', strokeWidth:'1.75', display:'block', flexShrink:0 }}></i>
+            <span>Thanks! I'll read your message and get back to you if needed.</span>
+          </div>
+        ) : (
+          <form onSubmit={e => { e.preventDefault(); setFormState(s => ({...s, submitted:true})); }} style={adS.form}>
+            <div style={adS.formRow}>
+              <div style={adS.field}><label style={adS.label}>Your Name</label><input style={adS.input} type="text" placeholder="e.g. Alex Johnson" /></div>
+              <div style={adS.field}><label style={adS.label}>Email (optional)</label><input style={adS.input} type="email" placeholder="you@example.com" /></div>
+            </div>
+            <div style={adS.field}><label style={adS.label}>Your Message</label><textarea style={adS.textarea} rows={4} placeholder="Tell me what you think, or suggest a new feature..."></textarea></div>
+            <button type="submit" style={adS.submitBtn}>Send Feedback</button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+};
+const adS = {
+  wrap: { padding:'40px 48px' },
+  back: { display:'inline-flex', alignItems:'center', gap:'6px', background:'none', border:'none', cursor:'pointer', fontFamily:"'Oswald', sans-serif", fontSize:'11px', fontWeight:'600', letterSpacing:'0.1em', textTransform:'uppercase', color:'#C97200', marginBottom:'28px', padding:'0' },
+  hero: { display:'flex', alignItems:'center', gap:'20px', marginBottom:'20px' },
+  heroIcon: { width:'72px', height:'72px', borderRadius:'50%', background:'#540608', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, boxShadow:'0 4px 20px rgba(84,6,8,0.15)' },
+  category: { fontFamily:"'Oswald', sans-serif", fontSize:'11px', letterSpacing:'0.12em', textTransform:'uppercase', color:'#A99080', display:'block', marginBottom:'4px' },
+  title: { fontFamily:"'Oswald', sans-serif", fontSize:'42px', fontWeight:'700', textTransform:'uppercase', letterSpacing:'0.04em', color:'#540608', lineHeight:'1.05' },
+  tagRow: { display:'flex', gap:'6px', marginTop:'8px' },
+  tagFree: { padding:'2px 8px', borderRadius:'4px', background:'#F2DADA', color:'#540608', fontFamily:"'Oswald',sans-serif", fontSize:'9px', letterSpacing:'0.08em', textTransform:'uppercase', fontWeight:'600' },
+  desc: { fontFamily:"'Lora', serif", fontSize:'15px', color:'#1A1008', lineHeight:'1.75', maxWidth:'580px', marginBottom:'28px' },
+  divider: { borderTop:'1px solid #E2D8CC', margin:'28px 0' },
+  howto: { marginBottom:'8px' },
+  h2: { fontFamily:"'Oswald', sans-serif", fontSize:'26px', fontWeight:'600', textTransform:'uppercase', letterSpacing:'0.05em', color:'#540608', marginBottom:'18px' },
+  steps: { listStyle:'none', display:'flex', flexDirection:'column', gap:'10px', paddingLeft:'0' },
+  step: { display:'flex', alignItems:'flex-start', gap:'12px' },
+  stepNum: { width:'24px', height:'24px', borderRadius:'50%', background:'#540608', color:'#EA8724', fontFamily:"'Oswald', sans-serif", fontSize:'11px', fontWeight:'700', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, marginTop:'1px' },
+  stepText: { fontFamily:"'Lora', serif", fontSize:'14px', color:'#1A1008', lineHeight:'1.65' },
+  feedbackIntro: { fontFamily:"'Lora', serif", fontSize:'14px', color:'#6B5744', lineHeight:'1.65', marginBottom:'20px' },
+  form: { display:'flex', flexDirection:'column', gap:'14px', maxWidth:'560px' },
+  formRow: { display:'grid', gridTemplateColumns:'1fr 1fr', gap:'14px' },
+  field: { display:'flex', flexDirection:'column', gap:'5px' },
+  label: { fontFamily:"'Oswald', sans-serif", fontSize:'10px', fontWeight:'600', letterSpacing:'0.1em', textTransform:'uppercase', color:'#6B5744' },
+  input: { padding:'9px 12px', border:'1px solid #E2D8CC', borderRadius:'8px', background:'#F0EAE2', fontFamily:"'Lora', serif", fontSize:'13px', color:'#1A1008', outline:'none' },
+  textarea: { padding:'9px 12px', border:'1px solid #E2D8CC', borderRadius:'8px', background:'#F0EAE2', fontFamily:"'Lora', serif", fontSize:'13px', color:'#1A1008', outline:'none', resize:'vertical' },
+  submitBtn: { alignSelf:'flex-start', padding:'11px 28px', background:'#540608', color:'#EA8724', border:'none', borderRadius:'8px', fontFamily:"'Oswald', sans-serif", fontSize:'13px', fontWeight:'600', letterSpacing:'0.1em', textTransform:'uppercase', cursor:'pointer' },
+  successMsg: { display:'flex', alignItems:'center', gap:'10px', background:'#F0EAE2', border:'1px solid #C4B0A0', borderRadius:'8px', padding:'14px 16px', maxWidth:'460px', fontFamily:"'Lora', serif", fontSize:'14px', color:'#3A7D44' },
+};
+
+/* ── CONTACT ── */
+const ContactForm = () => {
+  const [form, setForm] = React.useState({ name:'', email:'', subject:'', message:'', submitted:false });
+  const update = (k,v) => setForm(s => ({...s, [k]:v}));
+  return (
+    <div style={cfS.wrap}>
+      <div style={cfS.header}>
+        <span style={cfS.eyebrow}>Contact Me</span>
+        <h1 style={cfS.h1}>Get in Touch</h1>
+        <p style={cfS.lead}>Have a question, a bug report, or just want to say hi? I'd love to hear from you.</p>
+      </div>
+      <div style={cfS.layout}>
+        <div>
+          {form.submitted ? (
+            <div style={cfS.successWrap}>
+              <div style={cfS.successIcon}><i data-lucide="check" style={{ width:'28px', height:'28px', stroke:'#EA8724', strokeWidth:'2', display:'block' }}></i></div>
+              <h3 style={cfS.successTitle}>Message Sent!</h3>
+              <p style={cfS.successText}>Thanks for reaching out. I read every message and will get back to you soon.</p>
+              <button style={cfS.resetBtn} onClick={() => setForm({name:'',email:'',subject:'',message:'',submitted:false})}>Send Another</button>
+            </div>
+          ) : (
+            <form style={cfS.form} onSubmit={e => { e.preventDefault(); update('submitted', true); }}>
+              <div style={cfS.row}>
+                <div style={cfS.field}><label style={cfS.label}>Your Name</label><input style={cfS.input} type="text" placeholder="e.g. Alex Johnson" value={form.name} onChange={e => update('name', e.target.value)} /></div>
+                <div style={cfS.field}><label style={cfS.label}>Email Address</label><input style={cfS.input} type="email" placeholder="you@example.com" value={form.email} onChange={e => update('email', e.target.value)} /></div>
+              </div>
+              <div style={cfS.field}><label style={cfS.label}>Subject</label><input style={cfS.input} type="text" placeholder="What's this about?" value={form.subject} onChange={e => update('subject', e.target.value)} /></div>
+              <div style={cfS.field}><label style={cfS.label}>Message</label><textarea style={cfS.textarea} rows={5} placeholder="Tell me what's on your mind..." value={form.message} onChange={e => update('message', e.target.value)}></textarea></div>
+              <button type="submit" style={cfS.submitBtn}>Send Message</button>
+            </form>
+          )}
+        </div>
+        <div style={cfS.infoCol}>
+          {[{title:'Response Time', text:"I typically respond within 1–2 days. For urgent matters, mention it in your subject line."},{title:'App Feedback', text:"If you have feedback on a specific app, head to that app's page — there's a dedicated form there."},{title:'Feature Requests', text:"I genuinely read every request. Your ideas have shaped these apps more than you know."}].map((c,i) => (
+            <div key={i} style={cfS.infoCard}>
+              <div style={cfS.infoTitle}>{c.title}</div>
+              <p style={cfS.infoText}>{c.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+const cfS = {
+  wrap: { padding:'52px 48px' },
+  header: { marginBottom:'36px' },
+  eyebrow: { fontFamily:"'Oswald', sans-serif", fontSize:'12px', letterSpacing:'0.2em', textTransform:'uppercase', color:'#EA8724', display:'block', marginBottom:'8px' },
+  h1: { fontFamily:"'Oswald', sans-serif", fontSize:'46px', fontWeight:'700', textTransform:'uppercase', letterSpacing:'0.04em', color:'#540608', lineHeight:'1.05', marginBottom:'12px' },
+  lead: { fontFamily:"'Lora', serif", fontSize:'16px', color:'#6B5744', lineHeight:'1.65', maxWidth:'480px' },
+  layout: { display:'grid', gridTemplateColumns:'1fr 280px', gap:'40px', alignItems:'start' },
+  form: { display:'flex', flexDirection:'column', gap:'16px' },
+  row: { display:'grid', gridTemplateColumns:'1fr 1fr', gap:'16px' },
+  field: { display:'flex', flexDirection:'column', gap:'5px' },
+  label: { fontFamily:"'Oswald', sans-serif", fontSize:'10px', fontWeight:'600', letterSpacing:'0.1em', textTransform:'uppercase', color:'#6B5744' },
+  input: { padding:'10px 14px', border:'1px solid #E2D8CC', borderRadius:'8px', background:'#F0EAE2', fontFamily:"'Lora', serif", fontSize:'14px', color:'#1A1008', outline:'none' },
+  textarea: { padding:'10px 14px', border:'1px solid #E2D8CC', borderRadius:'8px', background:'#F0EAE2', fontFamily:"'Lora', serif", fontSize:'14px', color:'#1A1008', outline:'none', resize:'vertical' },
+  submitBtn: { alignSelf:'flex-start', padding:'12px 30px', background:'#540608', color:'#EA8724', border:'none', borderRadius:'8px', fontFamily:"'Oswald', sans-serif", fontSize:'13px', fontWeight:'600', letterSpacing:'0.1em', textTransform:'uppercase', cursor:'pointer' },
+  infoCol: { display:'flex', flexDirection:'column', gap:'12px' },
+  infoCard: { background:'#FFFFFF', borderRadius:'12px', border:'1px solid #E2D8CC', padding:'16px 18px', boxShadow:'0 1px 6px rgba(84,6,8,0.06)' },
+  infoTitle: { fontFamily:"'Oswald', sans-serif", fontSize:'13px', fontWeight:'600', letterSpacing:'0.08em', textTransform:'uppercase', color:'#540608', marginBottom:'6px' },
+  infoText: { fontFamily:"'Lora', serif", fontSize:'12px', color:'#6B5744', lineHeight:'1.65' },
+  successWrap: { display:'flex', flexDirection:'column', alignItems:'flex-start', gap:'12px', maxWidth:'420px', paddingTop:'20px' },
+  successIcon: { width:'56px', height:'56px', borderRadius:'50%', background:'#540608', display:'flex', alignItems:'center', justifyContent:'center' },
+  successTitle: { fontFamily:"'Oswald', sans-serif", fontSize:'28px', fontWeight:'700', textTransform:'uppercase', letterSpacing:'0.05em', color:'#540608' },
+  successText: { fontFamily:"'Lora', serif", fontSize:'14px', color:'#6B5744', lineHeight:'1.7' },
+  resetBtn: { padding:'10px 22px', background:'transparent', color:'#782121', border:'1.5px solid #782121', borderRadius:'8px', fontFamily:"'Oswald', sans-serif", fontSize:'12px', fontWeight:'600', letterSpacing:'0.1em', textTransform:'uppercase', cursor:'pointer' },
+};
+
+/* ── APP ── */
+const App = () => {
+  const [page, setPage] = React.useState('main');
+  React.useEffect(() => { if (window.lucide) window.lucide.createIcons(); });
+  const renderPage = () => {
+    switch(page) {
+      case 'main':      return <HeroSection onNavigate={setPage} />;
+      case 'about':     return <AboutSection />;
+      case 'apps':      return <AppsSection onNavigate={setPage} />;
+      case 'appdetail': return <AppDetail onNavigate={setPage} />;
+      case 'contact':   return <ContactForm />;
+      default:          return <HeroSection onNavigate={setPage} />;
+    }
+  };
+  return (
+    <div style={{ display:'flex', height:'100vh', overflow:'hidden', background:'#FAF7F2' }}>
+      <SideNav currentPage={page === 'appdetail' ? 'apps' : page} onNavigate={setPage} />
+      <main style={{ flex:1, overflow:'hidden', display:'flex', flexDirection:'column' }}>
+        <div style={{ flex:1, overflowY:'auto', height:'100%' }}>
+          {renderPage()}
+        </div>
+      </main>
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
