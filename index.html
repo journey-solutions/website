@@ -75,8 +75,10 @@ const AppCard = ({ icon, category, title, description, tag, tagColor, onClick })
   return (
     <div onClick={onClick} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       style={{...acS.card, ...(hovered ? acS.cardHover : {}), cursor: onClick ? 'pointer' : 'default'}}>
-      <div style={{...acS.iconWrap, background: tagColor === 'amber' ? '#EA8724' : '#540608'}}>
-        <i data-lucide={icon} style={{...acS.icon, stroke: tagColor === 'amber' ? '#540608' : '#EA8724'}}></i>
+      <div style={{...acS.iconWrap, background: /\.(png|jpg|jpeg|svg|webp)$/i.test(icon) ? 'transparent' : (tagColor === 'amber' ? '#EA8724' : '#540608'), padding: /\.(png|jpg|jpeg|svg|webp)$/i.test(icon) ? 0 : undefined, width: /\.(png|jpg|jpeg|svg|webp)$/i.test(icon) ? '52px' : '44px', height: /\.(png|jpg|jpeg|svg|webp)$/i.test(icon) ? '52px' : '44px', overflow: 'hidden'}}>
+        {/\.(png|jpg|jpeg|svg|webp)$/i.test(icon)
+          ? <img src={icon} alt="" style={{width:'100%', height:'100%', objectFit:'cover', display:'block'}} />
+          : <i data-lucide={icon} style={{...acS.icon, stroke: tagColor === 'amber' ? '#540608' : '#EA8724'}}></i>}
       </div>
       <div style={acS.category}>{category}</div>
       <div style={acS.title}>{title}</div>
@@ -125,9 +127,9 @@ const HeroSection = ({ onNavigate }) => (
       <div style={hS.stripLabel}>Featured Apps</div>
       <div style={hS.stripCards}>
         {[
-          { icon:'wind',        category:'Meditation', title:'Still',           description:'A gentle habit starter for daily meditation. Build a practice that actually sticks.', tag:'Free', tagColor:null },
-          { icon:'credit-card', category:'Finance',    title:'Payment Tracker', description:'Track loan payments with clarity. See what you owe, what you\'ve paid, and when you\'ll be done.', tag:'Free', tagColor:null },
-          { icon:'tent',        category:'Events',     title:'Rally Manager',   description:'Manage registrations for camping events and rallies — without the spreadsheet chaos.', tag:'Free', tagColor:null },
+          { icon:'still-icon.png',            category:'Meditation', title:'Still',           description:'A gentle habit starter for daily meditation. Build a practice that actually sticks.', tag:'Free', tagColor:null },
+          { icon:'payment-tracker-icon.png',  category:'Finance',    title:'Payment Tracker', description:'Track loan payments with clarity. See what you owe, what you\'ve paid, and when you\'ll be done.', tag:'Free', tagColor:null },
+          { icon:'tent',                      category:'Events',     title:'Rally Manager',   description:'Manage registrations for camping events and rallies — without the spreadsheet chaos.', tag:'Free', tagColor:null },
         ].map((app, i) => <AppCard key={i} {...app} onClick={() => onNavigate('appdetail')} />)}
       </div>
     </div>
@@ -199,9 +201,9 @@ const abS = {
 
 /* ── APPS ── */
 const APPS_DATA = [
-  { icon:'wind',        category:'Meditation', title:'Still',           description:'A gentle habit starter for daily meditation. Build a practice that actually sticks — one quiet moment at a time.', tag:'Free', tagColor:null },
-  { icon:'credit-card', category:'Finance',    title:'Payment Tracker', description:'Track loan payments with clarity. See what you owe, what you\'ve paid, and when you\'ll be done.', tag:'Free', tagColor:null },
-  { icon:'tent',        category:'Events',     title:'Rally Manager',   description:'Manage registrations for camping events and rallies. Keep attendees organized without the spreadsheet chaos.', tag:'Free', tagColor:null },
+  { icon:'still-icon.png',            category:'Meditation', title:'Still',           description:'A gentle habit starter for daily meditation. Build a practice that actually sticks — one quiet moment at a time.', tag:'Free', tagColor:null },
+  { icon:'payment-tracker-icon.png',  category:'Finance',    title:'Payment Tracker', description:'Track loan payments with clarity. See what you owe, what you\'ve paid, and when you\'ll be done.', tag:'Free', tagColor:null },
+  { icon:'tent',                      category:'Events',     title:'Rally Manager',   description:'Manage registrations for camping events and rallies. Keep attendees organized without the spreadsheet chaos.', tag:'Free', tagColor:null },
 ];
 const AppsSection = ({ onNavigate }) => (
   <div style={apS.wrap}>
@@ -234,8 +236,8 @@ const AppDetail = ({ onNavigate }) => {
         Back to Apps
       </button>
       <div style={adS.hero}>
-        <div style={adS.heroIcon}>
-          <i data-lucide="wind" style={{ width:'36px', height:'36px', stroke:'#EA8724', strokeWidth:'1.5', display:'block' }}></i>
+        <div style={{...adS.heroIcon, background:'transparent', overflow:'hidden', padding:0}}>
+          <img src="still-icon.png" alt="" style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
         </div>
         <div>
           <span style={adS.category}>Meditation</span>
