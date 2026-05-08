@@ -9,7 +9,6 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-<script src="logo-uris.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body, #root { height: 100%; }
@@ -18,6 +17,12 @@
 </style>
 </head>
 <body>
+<template id="__bundler_thumbnail" data-bg-color="#FAF7F2">
+  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="86" fill="#540608"/>
+    <text x="100" y="118" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="56" fill="#EA8724" letter-spacing="2">JS</text>
+  </svg>
+</template>
 <div id="root"></div>
 <script type="text/babel">
 
@@ -31,7 +36,7 @@ const SideNav = ({ currentPage, onNavigate }) => {
   ];
   return (
     <nav style={snS.nav}>
-        <div style={snS.logoWrap} dangerouslySetInnerHTML={{__html: window.LOGO_AMBER_SVG}} />
+        <div style={snS.logoWrap}><img src="logo-amber.svg" alt="Journey Solutions" style={{width:'100%', display:'block'}} /></div>
       <div style={snS.items}>
         {navItems.map(item => {
           const active = currentPage === item.id;
@@ -112,7 +117,7 @@ const HeroSection = ({ onNavigate }) => (
       </div>
       <div style={hS.heroArt}>
         <div style={hS.spiralWrap}>
-          <div dangerouslySetInnerHTML={{__html: window.LOGO_BURG_SVG}} style={{ width:'100%' }} />
+          <img src="logo-burgundy.svg" alt="Journey Solutions" style={{width:'100%', display:'block'}} />
         </div>
       </div>
     </div>
