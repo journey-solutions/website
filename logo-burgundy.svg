@@ -1,18 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" width="100%" height="100%" viewBox="0 0 220 324" id="svg57" xmlns:sodipodi-0.dtd="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:sodipodi-0.dtd="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" sodipodi-0.dtd:docname="Color logo - no background.svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
-  <metadata id="metadata63">
-    <RDF>
-      <Work xmlns:_="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:_="http://www.w3.org/1999/02/22-rdf-syntax-ns#" _:about="">
-        <format>image/svg+xml</format>
-        <type _:resource="http://purl.org/dc/dcmitype/StillImage"></type>
-        <title></title>
-      </Work>
-    </RDF>
-  </metadata>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 324" width="100%" height="100%">
+  
   <defs id="defs61"></defs>
-  <namedview pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" objecttolerance="10" gridtolerance="10" guidetolerance="10" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-width="2869" inkscape:window-height="1749" id="namedview59" showgrid="true" inkscape:zoom="0.5" inkscape:cx="1074.1875" inkscape:cy="1138.6371" inkscape:window-x="-14" inkscape:window-y="-14" inkscape:window-maximized="1" inkscape:current-layer="svg57" showguides="true">
-    <grid type="xygrid" id="grid870"></grid>
-  </namedview>
+  
   <g transform="scale(9.118541033434651) translate(10, 10)" id="g55">
     <defs id="SvgjsDefs7973"></defs>
     <g id="SvgjsG7974" featureKey="root" fill="#540608"></g>
@@ -52,5 +41,5 @@
       <path d="M6.84 14.92 l-1.96 0 l0 -2.1 c0 -0.98 -0.74 -1.46 -1.46 -1.46 c-0.74 0 -1.46 0.48 -1.46 1.46 l0 2.1 c0 1.24 4.88 0.7 4.88 4.34 l0 1.96 c0 2.1 -1.72 3.16 -3.42 3.16 c-1.72 0 -3.42 -1.06 -3.42 -3.16 l0 -2.1 l1.96 0 l0 2.1 c0 0.98 0.72 1.46 1.46 1.46 c0.72 0 1.46 -0.48 1.46 -1.46 l0 -2.1 c0 -1.38 -4.88 -0.7 -4.88 -4.2 l0 -2.1 c0 -2.1 1.7 -3.16 3.42 -3.16 c1.7 0 3.42 1.06 3.42 3.16 l0 2.1 z M15.68 12.8 l0 8.4 c0 2.12 -1.72 3.16 -3.42 3.16 c-1.72 0 -3.42 -1.04 -3.42 -3.16 l0 -8.4 c0 -2.1 1.7 -3.16 3.42 -3.16 c1.7 0 3.42 1.06 3.42 3.16 z M13.719999999999999 21.62 l0 -9.1 c0 -0.7 -0.74 -1.06 -1.46 -1.06 c-0.74 0 -1.46 0.36 -1.46 1.06 l0 9.1 c0 0.7 0.72 1.06 1.46 1.06 c0.72 0 1.46 -0.36 1.46 -1.06 z M19.64 22.04 l4.32 0 l0 1.96 l-4.32 0 l-1.96 0 l0 -13.98 l1.96 0 l0 12.02 z M30.84 10 l1.96 0 l0 11.22 c0 2.12 -1.72 3.16 -3.42 3.16 c-1.72 0 -3.42 -1.04 -3.42 -3.16 l0 -11.22 l1.96 0 l0 11.64 c0 0.7 0.72 1.06 1.46 1.06 c0.72 0 1.46 -0.36 1.46 -1.06 l0 -11.64 z M34.8 10 l6.74 0 l0 1.96 l-2.4 0 l0 12.04 l-1.94 0 l0 -12.04 l-2.4 0 l0 -1.96 z M43.54 24.02 l0 -13.98 l1.96 0 l0 13.98 l-1.96 0 z M54.34 12.8 l0 8.4 c0 2.12 -1.72 3.16 -3.42 3.16 c-1.72 0 -3.42 -1.04 -3.42 -3.16 l0 -8.4 c0 -2.1 1.7 -3.16 3.42 -3.16 c1.7 0 3.42 1.06 3.42 3.16 z M52.38 21.62 l0 -9.1 c0 -0.7 -0.74 -1.06 -1.46 -1.06 c-0.74 0 -1.46 0.36 -1.46 1.06 l0 9.1 c0 0.7 0.72 1.06 1.46 1.06 c0.72 0 1.46 -0.36 1.46 -1.06 z M61.52 10 l1.94 0 l0 14 l-1.94 0 l-3.22 -8.72 l0 8.72 l-1.96 0 l0 -14 l1.96 0 l3.22 8.72 l0 -8.72 z M72.30000000000001 14.92 l-1.96 0 l0 -2.1 c0 -0.98 -0.74 -1.46 -1.46 -1.46 c-0.74 0 -1.46 0.48 -1.46 1.46 l0 2.1 c0 1.24 4.88 0.7 4.88 4.34 l0 1.96 c0 2.1 -1.72 3.16 -3.42 3.16 c-1.72 0 -3.42 -1.06 -3.42 -3.16 l0 -2.1 l1.96 0 l0 2.1 c0 0.98 0.72 1.46 1.46 1.46 c0.72 0 1.46 -0.48 1.46 -1.46 l0 -2.1 c0 -1.38 -4.88 -0.7 -4.88 -4.2 l0 -2.1 c0 -2.1 1.7 -3.16 3.42 -3.16 c1.7 0 3.42 1.06 3.42 3.16 l0 2.1 z" id="path52"></path>
     </g>
   </g>
-  <path style="fill:none;stroke:#540608;stroke-width:20.89999962;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 2066,2622.3708 -1970,-10 v 0 0" id="path872" inkscape:connector-curvature="0"></path>
+  <path style="fill:none;stroke:#540608;stroke-width:20.89999962;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 2066,2622.3708 -1970,-10 v 0 0" id="path872"></path>
 </svg>
