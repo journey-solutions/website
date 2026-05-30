@@ -65,25 +65,29 @@ const AppDetail = ({ onNavigate }) => {
             <span>Thanks! I'll read your message and get back to you if needed.</span>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} style={detailStyles.form}>
+          <form name="app-feedback" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" data-netlify-recaptcha="true" onSubmit={handleSubmit} style={detailStyles.form}>
+            <input type="hidden" name="form-name" value="app-feedback" />
+            <input type="hidden" name="app" value="Trail Finder" />
+            <p style={{position:'absolute', left:'-9999px'}} aria-hidden="true"><label>Don't fill this out if you're human: <input name="bot-field" tabIndex={-1} autoComplete="off" /></label></p>
             <div style={detailStyles.formRow}>
               <div style={detailStyles.field}>
                 <label style={detailStyles.label}>Your Name</label>
-                <input style={detailStyles.input} type="text" placeholder="e.g. Alex Johnson"
+                <input style={detailStyles.input} type="text" name="name" placeholder="e.g. Alex Johnson"
                   value={formState.name} onChange={e => setFormState(s => ({...s, name: e.target.value}))} />
               </div>
               <div style={detailStyles.field}>
                 <label style={detailStyles.label}>Email (optional)</label>
-                <input style={detailStyles.input} type="email" placeholder="you@example.com"
+                <input style={detailStyles.input} type="email" name="email" placeholder="you@example.com"
                   value={formState.email} onChange={e => setFormState(s => ({...s, email: e.target.value}))} />
               </div>
             </div>
             <div style={detailStyles.field}>
               <label style={detailStyles.label}>Your Message</label>
-              <textarea style={detailStyles.textarea} rows={4}
+              <textarea style={detailStyles.textarea} name="message" rows={4}
                 placeholder="Tell me what you think, or suggest a new feature..."
                 value={formState.feedback} onChange={e => setFormState(s => ({...s, feedback: e.target.value}))}></textarea>
             </div>
+            <div data-netlify-recaptcha="true" style={{marginTop:'2px'}}></div>
             <button type="submit" style={detailStyles.submitBtn}>Send Feedback</button>
           </form>
         )}

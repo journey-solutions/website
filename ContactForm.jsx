@@ -23,25 +23,28 @@ const ContactForm = () => {
               <button style={contactStyles.resetBtn} onClick={() => setForm({ name:'', email:'', subject:'', message:'', submitted: false })}>Send Another</button>
             </div>
           ) : (
-            <form style={contactStyles.form} onSubmit={e => { e.preventDefault(); update('submitted', true); }}>
+            <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" data-netlify-recaptcha="true" style={contactStyles.form} onSubmit={e => { e.preventDefault(); update('submitted', true); }}>
+              <input type="hidden" name="form-name" value="contact" />
+              <p style={{position:'absolute', left:'-9999px'}} aria-hidden="true"><label>Don't fill this out if you're human: <input name="bot-field" tabIndex={-1} autoComplete="off" /></label></p>
               <div style={contactStyles.row}>
                 <div style={contactStyles.field}>
                   <label style={contactStyles.label}>Your Name</label>
-                  <input style={contactStyles.input} type="text" placeholder="e.g. Alex Johnson" value={form.name} onChange={e => update('name', e.target.value)} />
+                  <input style={contactStyles.input} type="text" name="name" placeholder="e.g. Alex Johnson" value={form.name} onChange={e => update('name', e.target.value)} />
                 </div>
                 <div style={contactStyles.field}>
                   <label style={contactStyles.label}>Email Address</label>
-                  <input style={contactStyles.input} type="email" placeholder="you@example.com" value={form.email} onChange={e => update('email', e.target.value)} />
+                  <input style={contactStyles.input} type="email" name="email" placeholder="you@example.com" value={form.email} onChange={e => update('email', e.target.value)} />
                 </div>
               </div>
               <div style={contactStyles.field}>
                 <label style={contactStyles.label}>Subject</label>
-                <input style={contactStyles.input} type="text" placeholder="What's this about?" value={form.subject} onChange={e => update('subject', e.target.value)} />
+                <input style={contactStyles.input} type="text" name="subject" placeholder="What's this about?" value={form.subject} onChange={e => update('subject', e.target.value)} />
               </div>
               <div style={contactStyles.field}>
                 <label style={contactStyles.label}>Message</label>
-                <textarea style={contactStyles.textarea} rows={5} placeholder="Tell me what's on your mind..." value={form.message} onChange={e => update('message', e.target.value)}></textarea>
+                <textarea style={contactStyles.textarea} name="message" rows={5} placeholder="Tell me what's on your mind..." value={form.message} onChange={e => update('message', e.target.value)}></textarea>
               </div>
+              <div data-netlify-recaptcha="true" style={{marginTop:'2px'}}></div>
               <button type="submit" style={contactStyles.submitBtn}>Send Message</button>
             </form>
           )}

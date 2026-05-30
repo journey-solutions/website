@@ -1,0 +1,368 @@
+/* ============================================================
+   Journey Solutions — Design System
+   colors_and_type.css
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+
+/* ============================================================
+   BASE COLOR TOKENS
+   ============================================================ */
+:root {
+  /* Brand palette */
+  --color-burgundy-900: #3A0204;
+  --color-burgundy-800: #540608;   /* Primary brand dark / logo bg */
+  --color-burgundy-700: #6B0C0E;
+  --color-burgundy-600: #782121;   /* Mid burgundy / logo mark */
+  --color-burgundy-500: #8B2E2E;
+  --color-burgundy-400: #A84040;
+  --color-burgundy-300: #C47070;
+  --color-burgundy-200: #DDA8A8;
+  --color-burgundy-100: #F2DADA;
+  --color-burgundy-50:  #FAF0F0;
+
+  --color-amber-900: #6B3A00;
+  --color-amber-800: #8C4E00;
+  --color-amber-700: #B06200;
+  --color-amber-600: #C97200;
+  --color-amber-500: #EA8724;      /* Primary brand amber / logo wordmark — exact SVG value */
+  --color-amber-400: #F0A033;
+  --color-amber-300: #F5B95C;
+  --color-amber-200: #FAD494;
+  --color-amber-100: #FCECD0;
+  --color-amber-50:  #FEF8EE;
+
+  --color-warm-950: #1A1008;       /* Near-black with warm undertone */
+  --color-warm-800: #3D2B1A;
+  --color-warm-700: #4E3823;
+  --color-warm-600: #6B5744;
+  --color-warm-500: #8A7260;
+  --color-warm-400: #A99080;
+  --color-warm-300: #C4B0A0;
+  --color-warm-200: #E2D8CC;       /* Border color */
+  --color-warm-100: #F0EAE2;
+  --color-warm-50:  #FAF7F2;       /* Page background */
+
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+
+  /* ============================================================
+     SEMANTIC COLOR TOKENS
+     ============================================================ */
+
+  /* Backgrounds */
+  --bg-page:        var(--color-warm-50);     /* #FAF7F2 — main page bg */
+  --bg-surface:     var(--color-white);       /* Card / panel surfaces */
+  --bg-sunken:      var(--color-warm-100);    /* Input fields, inset areas */
+  --bg-brand:       var(--color-burgundy-800);/* Brand-colored sections */
+  --bg-accent:      var(--color-amber-500);   /* Accent / CTA blocks */
+
+  /* Text */
+  --text-primary:   var(--color-warm-950);    /* Main body text */
+  --text-secondary: var(--color-warm-600);    /* Subdued / meta text */
+  --text-tertiary:  var(--color-warm-400);    /* Placeholders, disabled */
+  --text-on-brand:  var(--color-amber-500);   /* Text on burgundy bg */
+  --text-on-accent: var(--color-burgundy-800);/* Text on amber bg */
+  --text-link:      var(--color-amber-600);   /* Hyperlinks */
+  --text-link-hover:var(--color-burgundy-600);/* Hovered links */
+
+  /* Borders */
+  --border-default: var(--color-warm-200);    /* #E2D8CC */
+  --border-focus:   var(--color-amber-500);   /* Focus ring */
+  --border-brand:   var(--color-burgundy-600);
+
+  /* Interactive */
+  --btn-primary-bg:     var(--color-burgundy-800);
+  --btn-primary-text:   var(--color-amber-500);
+  --btn-primary-hover:  var(--color-burgundy-900);
+  --btn-secondary-bg:   var(--color-amber-500);
+  --btn-secondary-text: var(--color-burgundy-800);
+  --btn-secondary-hover:var(--color-amber-600);
+  --btn-ghost-text:     var(--color-burgundy-700);
+  --btn-ghost-border:   var(--color-burgundy-700);
+
+  /* Status */
+  --color-success: #3A7D44;
+  --color-warning: #C97200;
+  --color-error:   #C0392B;
+  --color-info:    #2E6EA6;
+
+  /* ============================================================
+     TYPOGRAPHY TOKENS
+     ============================================================ */
+
+  /* Font families */
+  --font-display: 'Oswald', 'Arial Narrow', sans-serif;  /* Headings, brand */
+  --font-body:    'Lora', 'Georgia', serif;               /* Body text */
+  --font-ui:      'Oswald', sans-serif;                   /* Buttons, labels, nav */
+  --font-mono:    'Courier New', monospace;               /* Code (if needed) */
+
+  /* Type scale — base 16px */
+  --text-xs:   0.75rem;    /* 12px */
+  --text-sm:   0.875rem;   /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-md:   1.125rem;   /* 18px */
+  --text-lg:   1.25rem;    /* 20px */
+  --text-xl:   1.5rem;     /* 24px */
+  --text-2xl:  1.875rem;   /* 30px */
+  --text-3xl:  2.25rem;    /* 36px */
+  --text-4xl:  3rem;       /* 48px */
+  --text-5xl:  3.75rem;    /* 60px */
+
+  /* Font weights */
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semibold:600;
+  --weight-bold:    700;
+
+  /* Line heights */
+  --leading-tight:  1.2;
+  --leading-snug:   1.35;
+  --leading-normal: 1.55;
+  --leading-relaxed:1.7;
+
+  /* Letter spacing */
+  --tracking-tight:  -0.01em;
+  --tracking-normal: 0em;
+  --tracking-wide:   0.05em;
+  --tracking-wider:  0.1em;
+  --tracking-widest: 0.15em;
+
+  /* ============================================================
+     SPACING SCALE
+     ============================================================ */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* ============================================================
+     BORDER RADIUS
+     ============================================================ */
+  --radius-sm:   4px;    /* Chips, tags, small elements */
+  --radius-md:   8px;    /* Buttons, inputs */
+  --radius-lg:   12px;   /* Cards, panels */
+  --radius-xl:   20px;   /* Large containers */
+  --radius-full: 9999px; /* Pills, circular nav icons */
+
+  /* ============================================================
+     SHADOWS
+     ============================================================ */
+  --shadow-xs:  0 1px 3px rgba(84, 6, 8, 0.06);
+  --shadow-sm:  0 2px 8px rgba(84, 6, 8, 0.08);
+  --shadow-md:  0 2px 16px rgba(84, 6, 8, 0.10);
+  --shadow-lg:  0 4px 32px rgba(84, 6, 8, 0.14);
+  --shadow-xl:  0 8px 48px rgba(84, 6, 8, 0.18);
+
+  /* Focus ring */
+  --focus-ring: 0 0 0 3px rgba(232, 135, 10, 0.35);
+
+  /* ============================================================
+     TRANSITIONS
+     ============================================================ */
+  --transition-fast:   150ms ease;
+  --transition-base:   250ms ease;
+  --transition-slow:   350ms ease;
+
+  /* ============================================================
+     LAYOUT
+     ============================================================ */
+  --content-max-width: 860px;
+  --side-nav-width: 96px;
+}
+
+/* ============================================================
+   SEMANTIC ELEMENT STYLES
+   ============================================================ */
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-burgundy-800);
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-burgundy-700);
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-burgundy-600);
+}
+
+h4 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-warm-950);
+}
+
+h5, h6 {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+p {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+  text-wrap: pretty;
+}
+
+p.lead {
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+a {
+  color: var(--text-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--text-link-hover);
+}
+
+code, pre {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  background: var(--bg-sunken);
+  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+}
+
+label {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+small {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+
+.text-display { font-family: var(--font-display); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
+.text-body    { font-family: var(--font-body); }
+.text-ui      { font-family: var(--font-ui); letter-spacing: var(--tracking-wide); text-transform: uppercase; }
+
+.text-primary   { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-brand     { color: var(--color-burgundy-800); }
+.text-amber     { color: var(--color-amber-500); }
+
+.bg-page    { background: var(--bg-page); }
+.bg-surface { background: var(--bg-surface); }
+.bg-brand   { background: var(--bg-brand); color: var(--text-on-brand); }
+.bg-accent  { background: var(--bg-accent); color: var(--text-on-accent); }
+
+.card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-default);
+  padding: var(--space-6);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.btn-primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+}
+.btn-primary:hover {
+  background: var(--btn-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+.btn-primary:active { transform: scale(0.98); }
+
+.btn-secondary {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+}
+.btn-secondary:hover {
+  background: var(--btn-secondary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--btn-ghost-text);
+  border: 1.5px solid var(--btn-ghost-border);
+}
+.btn-ghost:hover {
+  background: var(--color-burgundy-50);
+}
+
+.focus-ring:focus {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}

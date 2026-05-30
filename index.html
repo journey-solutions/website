@@ -14,6 +14,7 @@
   html, body, #root { height: 100%; }
   body { background: #FAF7F2; font-family: 'Lora', serif; overflow: hidden; }
   [data-lucide] { display: block; }
+  .hp-field { position: absolute !important; left: -9999px !important; top: -9999px; width: 1px; height: 1px; overflow: hidden; opacity: 0; }
 </style>
 </head>
 <body>
@@ -24,10 +25,60 @@
   </svg>
 </template>
 <div id="root"></div>
+
+<!-- Static form stubs so Netlify's build-time crawler can detect the JS-rendered forms.
+     These are hidden from users; the real forms above post to the matching names.
+     Each carries the honeypot (bot-field) field Netlify needs. -->
+<form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+  <input type="hidden" name="form-name" value="contact" />
+  <input name="bot-field" />
+  <input type="text" name="name" />
+  <input type="email" name="email" />
+  <input type="text" name="subject" />
+  <textarea name="message"></textarea>
+</form>
+<form name="feedback-still" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+  <input type="hidden" name="form-name" value="feedback-still" />
+  <input name="bot-field" />
+  <input type="text" name="app" />
+  <input type="text" name="name" />
+  <input type="email" name="email" />
+  <textarea name="message"></textarea>
+</form>
+<form name="feedback-payment-tracker" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+  <input type="hidden" name="form-name" value="feedback-payment-tracker" />
+  <input name="bot-field" />
+  <input type="text" name="app" />
+  <input type="text" name="name" />
+  <input type="email" name="email" />
+  <textarea name="message"></textarea>
+</form>
+<form name="feedback-rally-manager" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+  <input type="hidden" name="form-name" value="feedback-rally-manager" />
+  <input name="bot-field" />
+  <input type="text" name="app" />
+  <input type="text" name="name" />
+  <input type="email" name="email" />
+  <textarea name="message"></textarea>
+</form>
 <script type="text/babel">
+
+/* ── RESPONSIVE HOOK ── */
+const useIsMobile = (bp = 680) => {
+  const [m, setM] = React.useState(() => typeof window !== 'undefined' && window.innerWidth <= bp);
+  React.useEffect(() => {
+    const mq = window.matchMedia('(max-width: ' + bp + 'px)');
+    const on = e => setM(e.matches);
+    setM(mq.matches);
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, [bp]);
+  return m;
+};
 
 /* ── SIDENAV ── */
 const SideNav = ({ currentPage, onNavigate }) => {
+  const isMobile = useIsMobile();
   const navItems = [
     { id: 'main',    icon: 'home',     label: 'Main' },
     { id: 'about',   icon: 'user',     label: 'About Me' },
@@ -35,15 +86,15 @@ const SideNav = ({ currentPage, onNavigate }) => {
     { id: 'contact', icon: 'mail',     label: 'Contact' },
   ];
   return (
-    <nav style={snS.nav}>
-        <div style={snS.logoWrap}><img src="logo-amber.svg" alt="Journey Solutions" style={{width:'100%', display:'block'}} /></div>
-      <div style={snS.items}>
+    <nav style={{...snS.nav, ...(isMobile ? snS.navMobile : {})}}>
+        {!isMobile && <div style={snS.logoWrap}><img src="logo-amber.svg" alt="Journey Solutions" style={{width:'100%', display:'block'}} /></div>}
+      <div style={{...snS.items, ...(isMobile ? snS.itemsMobile : {})}}>
         {navItems.map(item => {
           const active = currentPage === item.id;
           return (
             <button key={item.id} onClick={() => onNavigate(item.id)}
-              style={{...snS.item, ...(active ? snS.itemActive : {})}}>
-              <div style={{...snS.circle, ...(active ? snS.circleActive : snS.circleDefault)}}>
+              style={{...snS.item, ...(active ? snS.itemActive : {}), ...(isMobile ? snS.itemMobile : {})}}>
+              <div style={{...snS.circle, ...(isMobile ? snS.circleMobile : {}), ...(active ? snS.circleActive : snS.circleDefault)}}>
                 <i data-lucide={item.icon} style={{...snS.icon, stroke: '#EA8724'}}></i>
               </div>
               <span style={{...snS.label, ...(active ? snS.labelActive : {})}}>{item.label}</span>
@@ -56,12 +107,16 @@ const SideNav = ({ currentPage, onNavigate }) => {
 };
 const snS = {
   nav: { width:'96px', minHeight:'100vh', background:'#FFFFFF', borderRight:'1px solid #E2D8CC', display:'flex', flexDirection:'column', alignItems:'center', paddingTop:'16px', paddingBottom:'24px', flexShrink:0, position:'sticky', top:0, height:'100vh', boxShadow:'2px 0 8px rgba(84,6,8,0.04)' },
+  navMobile: { width:'100%', minHeight:'auto', height:'auto', flexDirection:'row', borderRight:'none', borderBottom:'1px solid #E2D8CC', paddingTop:'0', paddingBottom:'0', position:'sticky', top:0, zIndex:20, boxShadow:'0 2px 10px rgba(84,6,8,0.07)' },
   logoWrap: { width:'80px', display:'block', marginBottom:'20px', flexShrink:0 },
   logo: { width:'80px', height:'auto', display:'block' },
   items: { display:'flex', flexDirection:'column', gap:'4px', width:'100%', alignItems:'center' },
+  itemsMobile: { flexDirection:'row', gap:'0', justifyContent:'space-around', alignItems:'stretch' },
   item: { display:'flex', flexDirection:'column', alignItems:'center', gap:'5px', background:'none', border:'none', cursor:'pointer', padding:'10px 8px', borderRadius:'10px', width:'84px', transition:'background 0.15s' },
+  itemMobile: { flex:1, width:'auto', borderRadius:'0', padding:'9px 4px 8px', gap:'4px', minHeight:'60px', justifyContent:'center' },
   itemActive: { background:'#FAF0F0' },
   circle: { width:'48px', height:'48px', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', transition:'background 0.15s' },
+  circleMobile: { width:'36px', height:'36px' },
   circleDefault: { background:'#540608' },
   circleActive: { background:'#540608' },
   icon: { width:'20px', height:'20px', strokeWidth:'1.75', display:'block' },
@@ -105,12 +160,14 @@ const acS = {
 };
 
 /* ── HERO ── */
-const HeroSection = ({ onNavigate }) => (
+const HeroSection = ({ onNavigate }) => {
+  const isMobile = useIsMobile();
+  return (
   <div style={hS.wrap}>
-    <div style={hS.hero}>
+    <div style={{...hS.hero, ...(isMobile ? hS.heroMobile : {})}}>
       <div style={hS.heroInner}>
         <span style={hS.eyebrow}>Welcome</span>
-        <h1 style={hS.h1}>Apps Built<br/>From Real Life</h1>
+        <h1 style={{...hS.h1, ...(isMobile ? hS.h1Mobile : {})}}>Apps Built<br/>From Real Life</h1>
         <p style={hS.lead}>I'm a solo developer who builds simple, honest apps — tools I wished existed. No bloat, no subscriptions. Just things that work.</p>
         <div style={hS.btns}>
           <button style={hS.btnPrimary} onClick={() => onNavigate('apps')}>Browse My Apps</button>
@@ -118,52 +175,60 @@ const HeroSection = ({ onNavigate }) => (
         </div>
       </div>
       <div style={hS.heroArt}>
-        <div style={hS.spiralWrap}>
+        <div style={{...hS.spiralWrap, ...(isMobile ? hS.spiralWrapMobile : {})}}>
           <img src="logo-burgundy.svg" alt="Journey Solutions" style={{width:'100%', display:'block'}} />
         </div>
       </div>
     </div>
-    <div style={hS.strip}>
+    <div style={{...hS.strip, ...(isMobile ? hS.stripMobile : {})}}>
       <div style={hS.stripLabel}>Featured Apps</div>
-      <div style={hS.stripCards}>
+      <div style={{...hS.stripCards, ...(isMobile ? hS.stripCardsMobile : {})}}>
         {[
-          { icon:'still-icon.png',            category:'Meditation', title:'Still',           description:'A gentle habit starter for daily meditation. Build a practice that actually sticks.', tag:'Free', tagColor:null },
-          { icon:'payment-tracker-icon.png',  category:'Finance',    title:'Payment Tracker', description:'Track loan payments with clarity. See what you owe, what you\'ve paid, and when you\'ll be done.', tag:'Free', tagColor:null },
-          { icon:'tent',                      category:'Events',     title:'Rally Manager',   description:'Manage registrations for camping events and rallies — without the spreadsheet chaos.', tag:'Free', tagColor:null },
-        ].map((app, i) => <AppCard key={i} {...app} onClick={() => onNavigate('appdetail')} />)}
+          { icon:'still-icon.png',            category:'Meditation', title:'Still',           description:'A gentle habit starter for daily meditation. Build a practice that actually sticks.', tag:null, tagColor:null },
+          { icon:'payment-tracker-icon.png',  category:'Finance',    title:'Payment Tracker', description:'Track loan payments with clarity. See what you owe, what you\'ve paid, and when you\'ll be done.', tag:null, tagColor:null },
+          { icon:'tent',                      category:'Events',     title:'Rally Manager',   description:'Manage registrations for camping events and rallies — without the spreadsheet chaos.', tag:null, tagColor:null },
+        ].map((app, i) => <AppCard key={i} {...app} onClick={() => onNavigate('appdetail', app.title)} />)}
       </div>
     </div>
   </div>
-);
+  );
+};
 const hS = {
   wrap: { display:'flex', flexDirection:'column' },
   hero: { display:'flex', alignItems:'center', gap:'40px', padding:'60px 48px 48px', minHeight:'380px' },
+  heroMobile: { flexDirection:'column-reverse', alignItems:'flex-start', gap:'20px', padding:'32px 22px 28px', minHeight:'auto' },
   heroInner: { flex:1, maxWidth:'520px' },
   eyebrow: { fontFamily:"'Oswald', sans-serif", fontSize:'12px', letterSpacing:'0.2em', textTransform:'uppercase', color:'#EA8724', display:'block', marginBottom:'10px' },
   h1: { fontFamily:"'Oswald', sans-serif", fontSize:'52px', fontWeight:'700', textTransform:'uppercase', letterSpacing:'0.04em', color:'#540608', lineHeight:'1.05', marginBottom:'18px' },
+  h1Mobile: { fontSize:'34px', marginBottom:'14px' },
   lead: { fontFamily:"'Lora', serif", fontSize:'17px', color:'#6B5744', lineHeight:'1.7', marginBottom:'28px', maxWidth:'440px' },
   btns: { display:'flex', gap:'12px', flexWrap:'wrap' },
   btnPrimary: { padding:'12px 28px', background:'#540608', color:'#EA8724', border:'none', borderRadius:'8px', fontFamily:"'Oswald', sans-serif", fontSize:'13px', fontWeight:'600', letterSpacing:'0.1em', textTransform:'uppercase', cursor:'pointer' },
   btnGhost: { padding:'11px 28px', background:'transparent', color:'#782121', border:'1.5px solid #782121', borderRadius:'8px', fontFamily:"'Oswald', sans-serif", fontSize:'13px', fontWeight:'600', letterSpacing:'0.1em', textTransform:'uppercase', cursor:'pointer' },
   heroArt: { flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center' },
   spiralWrap: { width:'200px', borderRadius:'20px', background:'transparent', boxShadow:'none', flexShrink:0, overflow:'hidden', padding:'16px' },
+  spiralWrapMobile: { width:'120px', padding:'8px' },
   spiralImg: { width:'220px' },
   strip: { borderTop:'1px solid #E2D8CC', padding:'32px 48px 48px', background:'#FFFFFF' },
+  stripMobile: { padding:'28px 22px 36px' },
   stripLabel: { fontFamily:"'Oswald', sans-serif", fontSize:'11px', letterSpacing:'0.15em', textTransform:'uppercase', color:'#A99080', marginBottom:'20px' },
   stripCards: { display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:'16px' },
+  stripCardsMobile: { gridTemplateColumns:'1fr', gap:'14px' },
 };
 
 /* ── ABOUT ── */
-const AboutSection = () => (
-  <div style={abS.wrap}>
-    <div style={abS.header}>
+const AboutSection = () => {
+  const isMobile = useIsMobile();
+  return (
+  <div style={{...abS.wrap, ...(isMobile ? abS.wrapMobile : {})}}>
+    <div style={{...abS.header, ...(isMobile ? abS.headerMobile : {})}}>
       <span style={abS.eyebrow}>About Me</span>
-      <h1 style={abS.h1}>Here's My Story</h1>
+      <h1 style={{...abS.h1, ...(isMobile ? abS.h1Mobile : {})}}>Here's My Story</h1>
     </div>
-    <div style={abS.body}>
-      <div style={abS.photoCol}>
+    <div style={{...abS.body, ...(isMobile ? abS.bodyMobile : {})}}>
+      <div style={{...abS.photoCol, ...(isMobile ? abS.photoColMobile : {})}}>
         <div style={abS.photoPlaceholder}>
-          <i data-lucide="user" style={{ width:'48px', height:'48px', stroke:'#EA8724', strokeWidth:'1.25', display:'block' }}></i>
+          <img src="headshot.png" alt="Journey Solutions Founder" style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 28%', display:'block' }} />
         </div>
         <div style={abS.photoCaption}>Journey Solutions Founder</div>
         <div style={abS.statRow}>
@@ -180,15 +245,21 @@ const AboutSection = () => (
       </div>
     </div>
   </div>
-);
+  );
+};
 const abS = {
   wrap: { padding:'52px 48px' },
+  wrapMobile: { padding:'32px 22px 40px' },
   header: { marginBottom:'40px' },
+  headerMobile: { marginBottom:'24px' },
   eyebrow: { fontFamily:"'Oswald', sans-serif", fontSize:'12px', letterSpacing:'0.2em', textTransform:'uppercase', color:'#EA8724', display:'block', marginBottom:'8px' },
   h1: { fontFamily:"'Oswald', sans-serif", fontSize:'46px', fontWeight:'700', textTransform:'uppercase', letterSpacing:'0.04em', color:'#540608', lineHeight:'1.05' },
+  h1Mobile: { fontSize:'32px' },
   body: { display:'flex', gap:'48px', alignItems:'flex-start' },
+  bodyMobile: { flexDirection:'column', gap:'28px', alignItems:'stretch' },
   photoCol: { flexShrink:0, width:'180px', display:'flex', flexDirection:'column', alignItems:'center', gap:'12px' },
-  photoPlaceholder: { width:'160px', height:'160px', borderRadius:'50%', background:'#540608', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 4px 20px rgba(84,6,8,0.15)' },
+  photoColMobile: { width:'100%' },
+  photoPlaceholder: { width:'160px', height:'160px', borderRadius:'50%', background:'#540608', overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 4px 20px rgba(84,6,8,0.15)' },
   photoCaption: { fontFamily:"'Oswald', sans-serif", fontSize:'10px', letterSpacing:'0.1em', textTransform:'uppercase', color:'#A99080', textAlign:'center' },
   statRow: { display:'flex', gap:'16px', marginTop:'4px' },
   stat: { display:'flex', flexDirection:'column', alignItems:'center' },
@@ -201,64 +272,128 @@ const abS = {
 
 /* ── APPS ── */
 const APPS_DATA = [
-  { icon:'still-icon.png',            category:'Meditation', title:'Still',           description:'A gentle habit starter for daily meditation. Build a practice that actually sticks — one quiet moment at a time.', tag:'Free', tagColor:null },
-  { icon:'payment-tracker-icon.png',  category:'Finance',    title:'Payment Tracker', description:'Track loan payments with clarity. See what you owe, what you\'ve paid, and when you\'ll be done.', tag:'Free', tagColor:null },
-  { icon:'tent',                      category:'Events',     title:'Rally Manager',   description:'Manage registrations for camping events and rallies. Keep attendees organized without the spreadsheet chaos.', tag:'Free', tagColor:null },
+  { icon:'still-icon.png',            category:'Meditation', title:'Still',           description:'A gentle habit starter for daily meditation. Build a practice that actually sticks — one quiet moment at a time.', tag:null, tagColor:null },
+  { icon:'payment-tracker-icon.png',  category:'Finance',    title:'Payment Tracker', description:'Track loan payments with clarity. See what you owe, what you\'ve paid, and when you\'ll be done.', tag:null, tagColor:null },
+  { icon:'tent',                      category:'Events',     title:'Rally Manager',   description:'Manage registrations for camping events and rallies. Keep attendees organized without the spreadsheet chaos.', tag:null, tagColor:null },
 ];
-const AppsSection = ({ onNavigate }) => (
-  <div style={apS.wrap}>
+const AppsSection = ({ onNavigate }) => {
+  const isMobile = useIsMobile();
+  return (
+  <div style={{...apS.wrap, ...(isMobile ? apS.wrapMobile : {})}}>
     <div style={apS.header}>
       <span style={apS.eyebrow}>All Apps</span>
-      <h1 style={apS.h1}>My App Collection</h1>
+      <h1 style={{...apS.h1, ...(isMobile ? apS.h1Mobile : {})}}>My App Collection</h1>
       <p style={apS.lead}>Each app started as a personal problem. Hopefully one of them solves yours.</p>
     </div>
-    <div style={apS.grid}>
-      {APPS_DATA.map((app, i) => <AppCard key={i} {...app} onClick={() => onNavigate('appdetail')} />)}
+    <div style={{...apS.grid, ...(isMobile ? apS.gridMobile : {})}}>
+      {APPS_DATA.map((app, i) => <AppCard key={i} {...app} onClick={() => onNavigate('appdetail', app.title)} />)}
     </div>
   </div>
-);
+  );
+};
 const apS = {
   wrap: { padding:'52px 48px' },
+  wrapMobile: { padding:'32px 22px 40px' },
   header: { marginBottom:'36px' },
   eyebrow: { fontFamily:"'Oswald', sans-serif", fontSize:'12px', letterSpacing:'0.2em', textTransform:'uppercase', color:'#EA8724', display:'block', marginBottom:'8px' },
   h1: { fontFamily:"'Oswald', sans-serif", fontSize:'46px', fontWeight:'700', textTransform:'uppercase', letterSpacing:'0.04em', color:'#540608', lineHeight:'1.05', marginBottom:'12px' },
+  h1Mobile: { fontSize:'32px' },
   lead: { fontFamily:"'Lora', serif", fontSize:'16px', color:'#6B5744', lineHeight:'1.65', maxWidth:'480px' },
   grid: { display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:'18px' },
+  gridMobile: { gridTemplateColumns:'1fr', gap:'14px' },
+};
+
+/* ── APP DETAIL DATA ── */
+const APP_DETAILS = {
+  'Still': {
+    iconType:'img', icon:'still-icon.png', category:'Meditation', title:'Still', shot:'still',
+    desc:"A gentle habit starter for daily meditation. Still was built for anyone who's tried to meditate and given up — because most apps make it too complicated. This one just asks you to show up.",
+    steps:['Open the app and choose your session length — even 2 minutes counts.','Tap Start and follow the gentle audio cues.','After each session, mark it complete to build your streak.','Review your history in the Calendar view.','Adjust reminders in Settings to fit your schedule.'],
+  },
+  'Payment Tracker': {
+    iconType:'img', icon:'payment-tracker-icon.png', category:'Finance', title:'Payment Tracker', shot:'payment-tracker',
+    desc:"Track loan payments with clarity. Payment Tracker shows you exactly what you owe, what you've already paid, and the date you'll finally be done — no spreadsheets, no guesswork.",
+    steps:['Add a loan with its balance, interest rate, and monthly payment.','Log each payment as you make it.','Watch your remaining balance and payoff date update automatically.','Switch to the timeline view to see your progress at a glance.','Set reminders so you never miss a due date.'],
+  },
+  'Rally Manager': {
+    iconType:'lucide', icon:'tent', category:'Events', title:'Rally Manager', shot:'rally-manager',
+    desc:"Manage registrations for camping events and rallies without the spreadsheet chaos. Rally Manager keeps your attendees, sign-ups, and check-ins organized in one calm place.",
+    steps:['Create an event with dates, location, and capacity.','Share the registration link with your attendees.','Review and approve registrations as they come in.','Track who has checked in from the attendee list.','Export the roster whenever you need a printable copy.'],
+  },
+};
+
+/* ── DEVICE SHOT (upload-ready screenshot frame) ── */
+const DeviceShot = ({ kind, filename }) => {
+  const [err, setErr] = React.useState(false);
+  React.useEffect(() => { if (err && window.lucide) window.lucide.createIcons(); }, [err]);
+  const isPhone = kind === 'phone';
+  const isMobile = useIsMobile();
+  const frameBase = isPhone ? adS.phoneFrame : adS.tabletFrame;
+  const frameMobile = isPhone ? adS.phoneFrameMobile : adS.tabletFrameMobile;
+  return (
+    <div style={{...frameBase, ...(isMobile ? frameMobile : {})}}>
+      {isPhone && <div style={adS.notch}></div>}
+      <div style={isPhone ? adS.phoneScreen : adS.tabletScreen}>
+        {!err
+          ? <img src={filename} alt="" onError={() => setErr(true)} style={adS.shotImg} />
+          : <div style={adS.shotPlaceholder}>
+              <i data-lucide={isPhone ? 'smartphone' : 'tablet'} style={{ width:'24px', height:'24px', stroke:'#B59C8A', strokeWidth:'1.5', display:'block', margin:'0 auto 10px' }}></i>
+              <div style={adS.shotPhLabel}>{isPhone ? 'Phone' : 'Tablet'} screenshot</div>
+              <div style={adS.shotPhFile}>{filename}</div>
+            </div>}
+      </div>
+    </div>
+  );
 };
 
 /* ── APP DETAIL ── */
-const AppDetail = ({ onNavigate }) => {
-  const [formState, setFormState] = React.useState({ name:'', email:'', feedback:'', submitted:false });
+const AppDetail = ({ appKey, onNavigate }) => {
+  const app = APP_DETAILS[appKey] || APP_DETAILS['Still'];
+  const [formState, setFormState] = React.useState({ submitted:false });
+  const isMobile = useIsMobile();
+  React.useEffect(() => { if (window.lucide) window.lucide.createIcons(); }, [appKey]);
   return (
-    <div style={adS.wrap}>
+    <div style={{...adS.wrap, ...(isMobile ? adS.wrapMobile : {})}}>
       <button style={adS.back} onClick={() => onNavigate('apps')}>
         <i data-lucide="arrow-left" style={{ width:'14px', height:'14px', stroke:'#C97200', strokeWidth:'2', display:'block' }}></i>
         Back to Apps
       </button>
       <div style={adS.hero}>
-        <div style={{...adS.heroIcon, background:'transparent', overflow:'hidden', padding:0}}>
-          <img src="still-icon.png" alt="" style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
-        </div>
+        {app.iconType === 'img'
+          ? <div style={{...adS.heroIcon, background:'transparent', overflow:'hidden', padding:0}}>
+              <img src={app.icon} alt="" style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+            </div>
+          : <div style={adS.heroIcon}>
+              <i data-lucide={app.icon} style={{ width:'36px', height:'36px', stroke:'#EA8724', strokeWidth:'1.5', display:'block' }}></i>
+            </div>}
         <div>
-          <span style={adS.category}>Meditation</span>
-          <h1 style={adS.title}>Still</h1>
-          <div style={adS.tagRow}>
-            <span style={adS.tagFree}>Free</span>
-          </div>
+          <span style={adS.category}>{app.category}</span>
+          <h1 style={{...adS.title, ...(isMobile ? adS.titleMobile : {})}}>{app.title}</h1>
         </div>
       </div>
-      <p style={adS.desc}>A gentle habit starter for daily meditation. Still was built for anyone who's tried to meditate and given up — because most apps make it too complicated. This one just asks you to show up.</p>
+      <p style={adS.desc}>{app.desc}</p>
+      <div style={adS.divider}></div>
+      <div style={adS.shotsSection}>
+        <h2 style={adS.h2}>Screenshots</h2>
+        <div style={{...adS.shotsPanel, ...(isMobile ? adS.shotsPanelMobile : {})}}>
+          <DeviceShot kind="tablet" filename={app.shot + '-tablet.png'} />
+          <DeviceShot kind="phone" filename={app.shot + '-phone.png'} />
+        </div>
+      </div>
       <div style={adS.divider}></div>
       <div style={adS.howto}>
         <h2 style={adS.h2}>How to Use</h2>
         <ol style={adS.steps}>
-          {['Open the app and choose your session length — even 2 minutes counts.','Tap Start and follow the gentle audio cues.','After each session, mark it complete to build your streak.','Review your history in the Calendar view.','Adjust reminders in Settings to fit your schedule.'].map((step, i) => (
+          {app.steps.map((step, i) => (
             <li key={i} style={adS.step}>
               <span style={adS.stepNum}>{i+1}</span>
               <span style={adS.stepText}>{step}</span>
             </li>
           ))}
         </ol>
+        <p style={adS.policyNote}>
+          Read the <a href={app.shot + '-privacy.html'} style={adS.policyLink}>{app.title} Privacy Policy</a>.
+        </p>
       </div>
       <div style={adS.divider}></div>
       <div>
@@ -270,12 +405,15 @@ const AppDetail = ({ onNavigate }) => {
             <span>Thanks! I'll read your message and get back to you if needed.</span>
           </div>
         ) : (
-          <form onSubmit={e => { e.preventDefault(); setFormState(s => ({...s, submitted:true})); }} style={adS.form}>
-            <div style={adS.formRow}>
-              <div style={adS.field}><label style={adS.label}>Your Name</label><input style={adS.input} type="text" placeholder="e.g. Alex Johnson" /></div>
-              <div style={adS.field}><label style={adS.label}>Email (optional)</label><input style={adS.input} type="email" placeholder="you@example.com" /></div>
+          <form name={'feedback-' + app.shot} method="POST" data-netlify="true" data-netlify-honeypot="bot-field" onSubmit={e => { e.preventDefault(); const fd = new FormData(e.target); fetch('/', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:new URLSearchParams(fd).toString() }).finally(() => setFormState(s => ({...s, submitted:true}))); }} style={adS.form}>
+            <input type="hidden" name="form-name" value={'feedback-' + app.shot} />
+            <input type="hidden" name="app" value={app.title} />
+            <p className="hp-field" aria-hidden="true"><label>Don't fill this out if you're human: <input name="bot-field" tabIndex={-1} autoComplete="off" /></label></p>
+            <div style={{...adS.formRow, ...(isMobile ? adS.formRowMobile : {})}}>
+              <div style={adS.field}><label style={adS.label}>Your Name</label><input style={adS.input} type="text" name="name" placeholder="e.g. Alex Johnson" /></div>
+              <div style={adS.field}><label style={adS.label}>Email (optional)</label><input style={adS.input} type="email" name="email" placeholder="you@example.com" /></div>
             </div>
-            <div style={adS.field}><label style={adS.label}>Your Message</label><textarea style={adS.textarea} rows={4} placeholder="Tell me what you think, or suggest a new feature..."></textarea></div>
+            <div style={adS.field}><label style={adS.label}>Your Message</label><textarea style={adS.textarea} name="message" rows={4} placeholder="Tell me what you think, or suggest a new feature..."></textarea></div>
             <button type="submit" style={adS.submitBtn}>Send Feedback</button>
           </form>
         )}
@@ -285,11 +423,27 @@ const AppDetail = ({ onNavigate }) => {
 };
 const adS = {
   wrap: { padding:'40px 48px' },
+  wrapMobile: { padding:'28px 22px 40px' },
+  shotsSection: { marginBottom:'8px' },
+  shotsPanel: { display:'flex', alignItems:'center', justifyContent:'center', gap:'0', padding:'48px 32px', background:'linear-gradient(135deg, #FBF4EC 0%, #F3E5D9 100%)', border:'1px solid #E2D8CC', borderRadius:'16px', marginTop:'2px', minHeight:'340px', flexWrap:'wrap' },
+  shotsPanelMobile: { flexDirection:'column', gap:'28px', padding:'32px 18px', minHeight:'auto' },
+  tabletFrame: { position:'relative', width:'400px', maxWidth:'58%', background:'#1A1008', borderRadius:'20px', padding:'14px', boxShadow:'0 20px 44px rgba(84,6,8,0.18)', flexShrink:0, zIndex:1 },
+  tabletFrameMobile: { width:'100%', maxWidth:'320px', marginLeft:'0' },
+  tabletScreen: { position:'relative', borderRadius:'9px', overflow:'hidden', background:'#F0EAE2', aspectRatio:'4 / 3' },
+  phoneFrame: { position:'relative', width:'176px', background:'#1A1008', borderRadius:'30px', padding:'10px', boxShadow:'0 22px 48px rgba(84,6,8,0.24)', flexShrink:0, marginLeft:'-46px', zIndex:2 },
+  phoneFrameMobile: { marginLeft:'0', width:'168px' },
+  phoneScreen: { position:'relative', borderRadius:'22px', overflow:'hidden', background:'#F0EAE2', aspectRatio:'9 / 19.5' },
+  notch: { position:'absolute', top:'20px', left:'50%', transform:'translateX(-50%)', width:'46px', height:'6px', borderRadius:'3px', background:'#000', zIndex:3 },
+  shotImg: { width:'100%', height:'100%', objectFit:'cover', display:'block' },
+  shotPlaceholder: { position:'absolute', inset:0, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', textAlign:'center', padding:'14px' },
+  shotPhLabel: { fontFamily:"'Oswald', sans-serif", fontSize:'9px', letterSpacing:'0.12em', textTransform:'uppercase', color:'#A99080', marginBottom:'5px' },
+  shotPhFile: { fontFamily:"'Oswald', sans-serif", fontSize:'10px', letterSpacing:'0.03em', color:'#C97200', wordBreak:'break-all', lineHeight:'1.4' },
   back: { display:'inline-flex', alignItems:'center', gap:'6px', background:'none', border:'none', cursor:'pointer', fontFamily:"'Oswald', sans-serif", fontSize:'11px', fontWeight:'600', letterSpacing:'0.1em', textTransform:'uppercase', color:'#C97200', marginBottom:'28px', padding:'0' },
   hero: { display:'flex', alignItems:'center', gap:'20px', marginBottom:'20px' },
   heroIcon: { width:'72px', height:'72px', borderRadius:'50%', background:'#540608', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, boxShadow:'0 4px 20px rgba(84,6,8,0.15)' },
   category: { fontFamily:"'Oswald', sans-serif", fontSize:'11px', letterSpacing:'0.12em', textTransform:'uppercase', color:'#A99080', display:'block', marginBottom:'4px' },
   title: { fontFamily:"'Oswald', sans-serif", fontSize:'42px', fontWeight:'700', textTransform:'uppercase', letterSpacing:'0.04em', color:'#540608', lineHeight:'1.05' },
+  titleMobile: { fontSize:'30px' },
   tagRow: { display:'flex', gap:'6px', marginTop:'8px' },
   tagFree: { padding:'2px 8px', borderRadius:'4px', background:'#F2DADA', color:'#540608', fontFamily:"'Oswald',sans-serif", fontSize:'9px', letterSpacing:'0.08em', textTransform:'uppercase', fontWeight:'600' },
   desc: { fontFamily:"'Lora', serif", fontSize:'15px', color:'#1A1008', lineHeight:'1.75', maxWidth:'580px', marginBottom:'28px' },
@@ -298,11 +452,14 @@ const adS = {
   h2: { fontFamily:"'Oswald', sans-serif", fontSize:'26px', fontWeight:'600', textTransform:'uppercase', letterSpacing:'0.05em', color:'#540608', marginBottom:'18px' },
   steps: { listStyle:'none', display:'flex', flexDirection:'column', gap:'10px', paddingLeft:'0' },
   step: { display:'flex', alignItems:'flex-start', gap:'12px' },
+  policyNote: { fontFamily:"'Lora', serif", fontSize:'13px', fontStyle:'italic', color:'#A99080', marginTop:'18px', lineHeight:'1.6' },
+  policyLink: { color:'#C97200', textDecoration:'none', borderBottom:'1px solid rgba(201,114,0,0.35)', fontStyle:'normal' },
   stepNum: { width:'24px', height:'24px', borderRadius:'50%', background:'#540608', color:'#EA8724', fontFamily:"'Oswald', sans-serif", fontSize:'11px', fontWeight:'700', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, marginTop:'1px' },
   stepText: { fontFamily:"'Lora', serif", fontSize:'14px', color:'#1A1008', lineHeight:'1.65' },
   feedbackIntro: { fontFamily:"'Lora', serif", fontSize:'14px', color:'#6B5744', lineHeight:'1.65', marginBottom:'20px' },
   form: { display:'flex', flexDirection:'column', gap:'14px', maxWidth:'560px' },
   formRow: { display:'grid', gridTemplateColumns:'1fr 1fr', gap:'14px' },
+  formRowMobile: { gridTemplateColumns:'1fr' },
   field: { display:'flex', flexDirection:'column', gap:'5px' },
   label: { fontFamily:"'Oswald', sans-serif", fontSize:'10px', fontWeight:'600', letterSpacing:'0.1em', textTransform:'uppercase', color:'#6B5744' },
   input: { padding:'9px 12px', border:'1px solid #E2D8CC', borderRadius:'8px', background:'#F0EAE2', fontFamily:"'Lora', serif", fontSize:'13px', color:'#1A1008', outline:'none' },
@@ -315,14 +472,15 @@ const adS = {
 const ContactForm = () => {
   const [form, setForm] = React.useState({ name:'', email:'', subject:'', message:'', submitted:false });
   const update = (k,v) => setForm(s => ({...s, [k]:v}));
+  const isMobile = useIsMobile();
   return (
-    <div style={cfS.wrap}>
+    <div style={{...cfS.wrap, ...(isMobile ? cfS.wrapMobile : {})}}>
       <div style={cfS.header}>
         <span style={cfS.eyebrow}>Contact Me</span>
-        <h1 style={cfS.h1}>Get in Touch</h1>
+        <h1 style={{...cfS.h1, ...(isMobile ? cfS.h1Mobile : {})}}>Get in Touch</h1>
         <p style={cfS.lead}>Have a question, a bug report, or just want to say hi? I'd love to hear from you.</p>
       </div>
-      <div style={cfS.layout}>
+      <div style={{...cfS.layout, ...(isMobile ? cfS.layoutMobile : {})}}>
         <div>
           {form.submitted ? (
             <div style={cfS.successWrap}>
@@ -332,13 +490,15 @@ const ContactForm = () => {
               <button style={cfS.resetBtn} onClick={() => setForm({name:'',email:'',subject:'',message:'',submitted:false})}>Send Another</button>
             </div>
           ) : (
-            <form style={cfS.form} onSubmit={e => { e.preventDefault(); update('submitted', true); }}>
-              <div style={cfS.row}>
-                <div style={cfS.field}><label style={cfS.label}>Your Name</label><input style={cfS.input} type="text" placeholder="e.g. Alex Johnson" value={form.name} onChange={e => update('name', e.target.value)} /></div>
-                <div style={cfS.field}><label style={cfS.label}>Email Address</label><input style={cfS.input} type="email" placeholder="you@example.com" value={form.email} onChange={e => update('email', e.target.value)} /></div>
+            <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" style={cfS.form} onSubmit={e => { e.preventDefault(); const fd = new FormData(e.target); fetch('/', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:new URLSearchParams(fd).toString() }).finally(() => update('submitted', true)); }}>
+              <input type="hidden" name="form-name" value="contact" />
+              <p className="hp-field" aria-hidden="true"><label>Don't fill this out if you're human: <input name="bot-field" tabIndex={-1} autoComplete="off" /></label></p>
+              <div style={{...cfS.row, ...(isMobile ? cfS.rowMobile : {})}}>
+                <div style={cfS.field}><label style={cfS.label}>Your Name</label><input style={cfS.input} type="text" name="name" placeholder="e.g. Alex Johnson" value={form.name} onChange={e => update('name', e.target.value)} /></div>
+                <div style={cfS.field}><label style={cfS.label}>Email Address</label><input style={cfS.input} type="email" name="email" placeholder="you@example.com" value={form.email} onChange={e => update('email', e.target.value)} /></div>
               </div>
-              <div style={cfS.field}><label style={cfS.label}>Subject</label><input style={cfS.input} type="text" placeholder="What's this about?" value={form.subject} onChange={e => update('subject', e.target.value)} /></div>
-              <div style={cfS.field}><label style={cfS.label}>Message</label><textarea style={cfS.textarea} rows={5} placeholder="Tell me what's on your mind..." value={form.message} onChange={e => update('message', e.target.value)}></textarea></div>
+              <div style={cfS.field}><label style={cfS.label}>Subject</label><input style={cfS.input} type="text" name="subject" placeholder="What's this about?" value={form.subject} onChange={e => update('subject', e.target.value)} /></div>
+              <div style={cfS.field}><label style={cfS.label}>Message</label><textarea style={cfS.textarea} name="message" rows={5} placeholder="Tell me what's on your mind..." value={form.message} onChange={e => update('message', e.target.value)}></textarea></div>
               <button type="submit" style={cfS.submitBtn}>Send Message</button>
             </form>
           )}
@@ -357,13 +517,17 @@ const ContactForm = () => {
 };
 const cfS = {
   wrap: { padding:'52px 48px' },
+  wrapMobile: { padding:'32px 22px 40px' },
   header: { marginBottom:'36px' },
   eyebrow: { fontFamily:"'Oswald', sans-serif", fontSize:'12px', letterSpacing:'0.2em', textTransform:'uppercase', color:'#EA8724', display:'block', marginBottom:'8px' },
   h1: { fontFamily:"'Oswald', sans-serif", fontSize:'46px', fontWeight:'700', textTransform:'uppercase', letterSpacing:'0.04em', color:'#540608', lineHeight:'1.05', marginBottom:'12px' },
+  h1Mobile: { fontSize:'32px' },
   lead: { fontFamily:"'Lora', serif", fontSize:'16px', color:'#6B5744', lineHeight:'1.65', maxWidth:'480px' },
   layout: { display:'grid', gridTemplateColumns:'1fr 280px', gap:'40px', alignItems:'start' },
+  layoutMobile: { gridTemplateColumns:'1fr', gap:'28px' },
   form: { display:'flex', flexDirection:'column', gap:'16px' },
   row: { display:'grid', gridTemplateColumns:'1fr 1fr', gap:'16px' },
+  rowMobile: { gridTemplateColumns:'1fr' },
   field: { display:'flex', flexDirection:'column', gap:'5px' },
   label: { fontFamily:"'Oswald', sans-serif", fontSize:'10px', fontWeight:'600', letterSpacing:'0.1em', textTransform:'uppercase', color:'#6B5744' },
   input: { padding:'10px 14px', border:'1px solid #E2D8CC', borderRadius:'8px', background:'#F0EAE2', fontFamily:"'Lora', serif", fontSize:'14px', color:'#1A1008', outline:'none' },
@@ -382,23 +546,28 @@ const cfS = {
 
 /* ── APP ── */
 const App = () => {
-  const [page, setPage] = React.useState('main');
+  const initApp = (() => { try { return new URLSearchParams(window.location.search).get('app'); } catch(e){ return null; } })();
+  const validInit = initApp && APP_DETAILS[initApp] ? initApp : null;
+  const [page, setPage] = React.useState(validInit ? 'appdetail' : 'main');
+  const [detailApp, setDetailApp] = React.useState(validInit || 'Still');
+  const isMobile = useIsMobile();
   React.useEffect(() => { if (window.lucide) window.lucide.createIcons(); });
+  const navigate = (p, app) => { if (app) setDetailApp(app); setPage(p); window.scrollTo(0,0); const sc = document.getElementById('scrollArea'); if (sc) sc.scrollTop = 0; };
   const renderPage = () => {
     switch(page) {
-      case 'main':      return <HeroSection onNavigate={setPage} />;
+      case 'main':      return <HeroSection onNavigate={navigate} />;
       case 'about':     return <AboutSection />;
-      case 'apps':      return <AppsSection onNavigate={setPage} />;
-      case 'appdetail': return <AppDetail onNavigate={setPage} />;
+      case 'apps':      return <AppsSection onNavigate={navigate} />;
+      case 'appdetail': return <AppDetail appKey={detailApp} onNavigate={navigate} />;
       case 'contact':   return <ContactForm />;
-      default:          return <HeroSection onNavigate={setPage} />;
+      default:          return <HeroSection onNavigate={navigate} />;
     }
   };
   return (
-    <div style={{ display:'flex', height:'100vh', overflow:'hidden', background:'#FAF7F2' }}>
-      <SideNav currentPage={page === 'appdetail' ? 'apps' : page} onNavigate={setPage} />
-      <main style={{ flex:1, overflow:'hidden', display:'flex', flexDirection:'column' }}>
-        <div style={{ flex:1, overflowY:'auto', height:'100%' }}>
+    <div style={{ display:'flex', flexDirection: isMobile ? 'column' : 'row', height:'100vh', overflow:'hidden', background:'#FAF7F2' }}>
+      <SideNav currentPage={page === 'appdetail' ? 'apps' : page} onNavigate={navigate} />
+      <main style={{ flex:1, minHeight:0, overflow:'hidden', display:'flex', flexDirection:'column' }}>
+        <div id="scrollArea" style={{ flex:1, overflowY:'auto', WebkitOverflowScrolling:'touch', height:'100%' }}>
           {renderPage()}
         </div>
       </main>
