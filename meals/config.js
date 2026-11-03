@@ -8,5 +8,4 @@ window.MEAL_FUND_FIREBASE = {
   storageBucket: "meal-fund-estimator.firebasestorage.app",
   messagingSenderId: "280166390210",
   appId: "1:280166390210:web:5df927a39b807e284cde5b",
-  measurementId: "G-BQFLWCH59F"
 };
