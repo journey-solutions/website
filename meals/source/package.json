@@ -1,0 +1,8 @@
+{
+  "name": "meal-fund",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "node build.mjs", "build:test": "node build.mjs --test" },
+  "dependencies": { "firebase": "^12.0.0" },
+  "devDependencies": { "esbuild": "^0.25.0" }
+}

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f4ef">
+<title>Meal Fund</title>
+<link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Meal Fund">
+<style>
+
+:root{
+  --bg:#f6f4ef; --card:#ffffff; --ink:#1d1c1a; --muted:#6b675f; --line:#e4e0d6;
+  --pos:#1f7a4d; --pos-bg:#e6f3ec; --neg:#b42318; --neg-bg:#fbe9e7; --zero:#2a5db0; --zero-bg:#e8eefa;
+  --warn:#a15c00; --warn-bg:#fdf1dc; --accent:#2a5db0; --chip:#efece5;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#151513; --card:#1f1f1c; --ink:#f1efe9; --muted:#a39f95; --line:#33322d;
+    --pos:#5cc48e; --pos-bg:#16301f; --neg:#ff7a6b; --neg-bg:#3a1a16; --zero:#8fb0f0; --zero-bg:#1a2540;
+    --warn:#f0b35a; --warn-bg:#3a2a12; --accent:#8fb0f0; --chip:#2a2a26;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+button,input{font:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:640px;margin:0 auto;padding:0 14px}
+
+/* Sticky end-of-month bar */
+.hero{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:8px 0 10px}
+.monthnav{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.monthnav h1{font-size:15px;font-weight:600;margin:0;color:var(--muted);letter-spacing:.02em}
+.iconbtn{background:var(--chip);border:0;border-radius:10px;width:38px;height:34px;font-size:20px;cursor:pointer;line-height:1}
+.endrow{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-top:6px;flex-wrap:wrap}
+.endlabel{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.endval{font-size:40px;font-weight:700;line-height:1.05;letter-spacing:-.02em}
+.endnote{font-size:14px;font-weight:600;margin-top:2px}
+.state-pos .endval,.state-pos .endnote{color:var(--pos)}
+.state-neg .endval,.state-neg .endnote{color:var(--neg)}
+.state-zero .endval,.state-zero .endnote{color:var(--zero)}
+.state-none .endval{color:var(--muted)}
+.logbtn{background:var(--accent);color:#fff;border:0;border-radius:12px;padding:10px 14px;font-weight:600;cursor:pointer;white-space:nowrap}
+@media (prefers-color-scheme: dark){.logbtn{color:#10172a}}
+.logbtn[hidden]{display:none}
+
+main{padding:12px 0 40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stat .k{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.stat .v{font-size:17px;font-weight:650}
+@media (max-width:400px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+.setup{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+label.fld{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
+.money{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;background:var(--bg);padding:0 10px;height:44px}
+.money span{color:var(--muted);margin-right:4px}
+.money input{border:0;background:transparent;outline:none;width:100%;font-size:18px;font-weight:600}
+.money:focus-within{border-color:var(--accent)}
+.stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;background:var(--bg);height:44px}
+.stepper button{border:0;background:transparent;width:40px;height:100%;font-size:20px;cursor:pointer}
+.stepper output{min-width:28px;text-align:center;font-weight:650;font-size:18px}
+.chiprow{margin-top:10px}
+.chip{background:var(--chip);border:0;border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer}
+.prompt{background:var(--warn-bg);color:var(--warn);border-radius:10px;padding:10px 12px;font-size:14px;margin-top:12px}
+
+.guide{font-size:15px}
+.guide strong{font-weight:650}
+.guide .sub{color:var(--muted);font-size:13px;margin-top:6px}
+.guide .warnline{color:var(--warn);font-size:13px;margin-top:6px}
+
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 2px 8px;font-weight:600}
+ol.meals{list-style:none;margin:0;padding:0;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.meal{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;padding:10px 14px;border-top:1px solid var(--line);cursor:pointer;width:100%;background:transparent;border-left:0;border-right:0;border-bottom:0;text-align:left}
+li:first-child .meal{border-top:0}
+.meal:hover{background:var(--chip)}
+.dt{text-align:center;line-height:1.1}
+.dt .dow{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.dt .dom{font-size:20px;font-weight:700}
+.mid .t{font-weight:600}
+.mid .d{font-size:13px;color:var(--muted)}
+.amt{text-align:right}
+.amt .a{font-weight:650}
+.amt .s{font-size:12px;color:var(--muted)}
+.tag{display:inline-block;font-size:11px;font-weight:650;border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:1px}
+.tag.next{background:var(--zero-bg);color:var(--zero)}
+.tag.todo{background:var(--warn-bg);color:var(--warn)}
+.meal.eaten .dt,.meal.eaten .mid{opacity:.75}
+.meal.skipped{opacity:.5}
+.meal.skipped .a{text-decoration:line-through}
+
+.daysbtn{display:flex;width:100%;align-items:center;justify-content:center;gap:8px}
+.daysbtn .chev{display:inline-block;transition:transform .15s}
+.daysbtn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+details.card summary{cursor:pointer;color:var(--muted);font-size:14px}
+.avgs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.note{font-size:13px;color:var(--muted);text-align:center;margin-top:16px}
+.note.err{color:var(--neg)}
+
+/* Sheet */
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.backdrop[hidden]{display:none}
+.sheet{background:var(--card);width:100%;max-width:520px;border-radius:18px 18px 0 0;padding:18px 16px 22px;max-height:92vh;overflow:auto}
+@media (min-width:700px){.backdrop{align-items:center}.sheet{border-radius:18px}}
+.sheet h3{margin:0;font-size:20px}
+.sheet .sh-sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+.row{margin-top:14px}
+.row.inline{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--chip);border-radius:10px;padding:3px}
+.seg button{border:0;background:transparent;border-radius:8px;padding:8px;cursor:pointer;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.preview{background:var(--bg);border-radius:10px;padding:10px 12px;font-size:14px;margin-top:12px}
+.preview div{display:flex;justify-content:space-between}
+.preview .big{font-weight:700;font-size:16px;margin-top:4px;padding-top:6px;border-top:1px solid var(--line)}
+.err-inline{color:var(--neg);font-size:13px;margin-top:6px;min-height:1em}
+.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:16px}
+.actions .btn{padding:12px 6px}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:12px;font-weight:600;cursor:pointer}
+.btn.primary{grid-column:1/-1;background:var(--accent);border-color:var(--accent);color:#fff}
+@media (prefers-color-scheme: dark){.btn.primary{color:#10172a}}
+.btn.ghost{background:transparent}
+.btn:disabled{opacity:.5;cursor:default}
+.ro input,.ro .stepper button{pointer-events:none}
+.shnav{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.shnav .btn{padding:9px 12px}
+
+/* auth + account */
+.authwrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.authcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 18px;width:100%;max-width:400px}
+.authcard h1{margin:0 0 4px;font-size:24px}
+.brand{display:block;width:72px;height:72px;margin:0 0 12px}
+.setuphead .brand{width:56px;height:56px}
+.authcard p.lead{margin:0 0 18px;color:var(--muted);font-size:14px}
+.txt{width:100%;height:46px;border:1px solid var(--line);border-radius:10px;background:var(--bg);padding:0 12px;font-size:16px;outline:none}
+.txt:focus{border-color:var(--accent)}
+.authcard .row{margin-top:12px}
+.authcard .btn{width:100%}
+.linkbtn{background:none;border:0;color:var(--accent);cursor:pointer;padding:6px 0;font-size:14px}
+.or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;margin:16px 0}
+.or::before,.or::after{content:"";flex:1;border-top:1px solid var(--line)}
+.authmsg{font-size:14px;margin-top:10px;min-height:1.2em}
+.authmsg.err{color:var(--neg)}
+.authmsg.ok{color:var(--pos)}
+.account{display:flex;justify-content:center;gap:10px;align-items:center;font-size:13px;color:var(--muted);margin-top:18px;flex-wrap:wrap}
+[hidden]{display:none !important}
+
+/* setup */
+.setuphead{padding:22px 2px 6px}
+.setuphead h1{margin:0;font-size:24px}
+.setuphead p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.step{display:block}
+.stephead{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.stepnum{flex:0 0 26px;height:26px;border-radius:50%;background:var(--zero-bg);color:var(--zero);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
+.steptitle{font-weight:650}
+.stephint{font-size:13px;color:var(--muted)}
+.step .stepper{display:inline-flex}
+.step .money{max-width:220px}
+.check{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);cursor:pointer;font-size:15px}
+.check input{width:20px;height:20px;margin:0;accent-color:var(--accent)}
+.days{margin-top:12px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.day{display:grid;grid-template-columns:54px 1fr;gap:10px;align-items:center;padding:8px 10px;border-top:1px solid var(--line)}
+.day:first-child{border-top:0}
+.day.off .dname{color:var(--muted)}
+.dname{font-weight:650}
+.dctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.dctl .stepper{height:38px}
+.dctl .stepper button{width:34px}
+.sel{height:38px;border:1px solid var(--line);border-radius:10px;background:var(--bg);padding:0 8px;font:inherit;font-size:15px;color:var(--ink);min-width:120px}
+.sel:focus{outline:none;border-color:var(--accent)}
+.costs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.costs .money{max-width:none}
+.costs .unused label{opacity:.55}
+@media (max-width:440px){.costs{grid-template-columns:1fr 1fr}}
+.susum{font-size:14px;line-height:1.5}
+.susum strong{font-weight:650}
+.setup-actions{display:grid;grid-template-columns:1fr;gap:8px;margin:4px 0 40px}
+.setup-actions .btn.primary{grid-column:auto}
+.setuplink{color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="authwrap" id="authView" hidden>
+  <form class="authcard" id="authForm" novalidate>
+    <img class="brand" src="icons/logo.png" width="72" height="72" alt="">
+    <h1>Meal Fund</h1>
+    <p class="lead" id="authLead">Sign in to track your monthly meal allowance.</p>
+    <label class="fld" for="email">Email</label>
+    <input class="txt" id="email" type="email" autocomplete="email" required>
+    <div class="row">
+      <label class="fld" for="password">Password</label>
+      <input class="txt" id="password" type="password" autocomplete="current-password" minlength="6" required>
+    </div>
+    <div class="row"><button class="btn primary" id="authSubmit" type="submit">Sign in</button></div>
+    <div style="display:flex;justify-content:space-between;margin-top:4px">
+      <button class="linkbtn" id="authToggle" type="button">Create an account</button>
+      <button class="linkbtn" id="authReset" type="button">Forgot password</button>
+    </div>
+    <div class="authmsg" id="authMsg"></div>
+    <div class="or">or</div>
+    <button class="btn" id="googleBtn" type="button">Continue with Google</button>
+  </form>
+</div>
+
+<div class="authwrap" id="bootView"><p class="note">Loading&hellip;</p></div>
+
+<div id="appView" hidden>
+<header class="hero" id="hero">
+  <div class="wrap">
+    <div class="monthnav">
+      <button class="iconbtn" id="prev" aria-label="Previous month">&#8249;</button>
+      <h1 id="monthTitle">&nbsp;</h1>
+      <button class="iconbtn" id="next" aria-label="Next month">&#8250;</button>
+    </div>
+    <div class="endrow">
+      <div>
+        <div class="endlabel">Projected end of month</div>
+        <div class="endval num" id="endVal">&mdash;</div>
+        <div class="endnote" id="endNote">&nbsp;</div>
+      </div>
+      <button class="logbtn" id="quickLog" hidden></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <section class="card">
+    <div class="stats">
+      <div class="stat"><div class="k">Allowance</div><div class="v num" id="sAllow">&mdash;</div></div>
+      <div class="stat"><div class="k">Spent</div><div class="v num" id="sSpent">&mdash;</div></div>
+      <div class="stat"><div class="k">Balance now</div><div class="v num" id="sBal">&mdash;</div></div>
+      <div class="stat"><div class="k">Meals left</div><div class="v num" id="sLeft">&mdash;</div></div>
+    </div>
+    <div class="setup">
+      <div>
+        <label class="fld" for="allowIn">Monthly allowance</label>
+        <div class="money"><span>$</span><input id="allowIn" inputmode="decimal" autocomplete="off" placeholder="0.00"></div>
+      </div>
+      <div>
+        <label class="fld">Usual headcount</label>
+        <div class="stepper"><button id="usualMinus" aria-label="Fewer">&minus;</button><output id="usualOut" class="num">2</output><button id="usualPlus" aria-label="More">+</button></div>
+      </div>
+    </div>
+    <div class="chiprow" id="suggestRow" hidden><button class="chip" id="suggestBtn"></button></div>
+    <div class="prompt" id="allowPrompt" hidden>Enter this month's allowance to see the end-of-month projection.</div>
+  </section>
+
+  <section class="card guide" id="guide" hidden></section>
+
+  <button class="btn daysbtn" id="daysToggle" type="button" aria-expanded="false" aria-controls="daysWrap">Show all days</button>
+
+  <div id="daysWrap" hidden>
+  <h2>Meals</h2>
+  <ol class="meals" id="meals"><li class="note" style="padding:16px">Loading&hellip;</li></ol>
+
+  <details class="card" id="avgCard" style="margin-top:12px">
+    <summary id="avgSummary">Average cost per person</summary>
+    <div class="avgs">
+      <div><label class="fld" for="dinIn">Dinner</label><div class="money"><span>$</span><input id="dinIn" inputmode="decimal" autocomplete="off"></div></div>
+      <div><label class="fld" for="brIn">Brunch</label><div class="money"><span>$</span><input id="brIn" inputmode="decimal" autocomplete="off"></div></div>
+      <div><label class="fld" for="otIn">Other meals</label><div class="money"><span>$</span><input id="otIn" inputmode="decimal" autocomplete="off"></div></div>
+    </div>
+  </details>
+  </div>
+
+  <p class="note" id="syncNote"></p>
+  <div class="account"><span id="whoami"></span><button class="linkbtn" id="setupLink" type="button">Setup</button><button class="linkbtn" id="signOutBtn" type="button">Sign out</button></div>
+</main>
+</div>
+
+<div id="setupView" hidden>
+<form class="wrap" id="setupForm" novalidate>
+  <header class="setuphead">
+    <img class="brand" src="icons/logo.png" width="56" height="56" alt="">
+    <h1 id="suTitle">Set up Meal Fund</h1>
+    <p id="suLead">These defaults fill in every month. Any single month or meal can still be changed later.</p>
+  </header>
+
+  <section class="card step">
+    <div class="stephead"><span class="stepnum">1</span><div><div class="steptitle">Default number of eaters</div><div class="stephint">People usually eating at each meal.</div></div></div>
+    <div class="stepper"><button type="button" id="suEatMinus" aria-label="Fewer">&minus;</button><output id="suEatOut" class="num">2</output><button type="button" id="suEatPlus" aria-label="More">+</button></div>
+  </section>
+
+  <section class="card step">
+    <div class="stephead"><span class="stepnum">2</span><div><div class="steptitle">Monthly allowance</div><div class="stephint">Added on the 1st of each month.</div></div></div>
+    <div class="money"><span>$</span><input id="suAllow" inputmode="decimal" autocomplete="off" placeholder="0.00"></div>
+  </section>
+
+  <section class="card step">
+    <div class="stephead"><span class="stepnum">3</span><div><div class="steptitle">Meals per day: <span id="suPerDay">1</span></div><div class="stephint" id="suDaysHint">Pick the meal for each eating day.</div></div></div>
+    <label class="check"><input type="checkbox" id="suMulti"> More than one meal on some days</label>
+    <div class="days" id="suDays"></div>
+  </section>
+
+  <section class="card step">
+    <div class="stephead"><span class="stepnum">4</span><div><div class="steptitle">Average cost per person</div><div class="stephint">Used to estimate meals not yet logged.</div></div></div>
+    <div class="costs">
+      <div id="suDinWrap"><label class="fld" for="suDin">Dinner</label><div class="money"><span>$</span><input id="suDin" inputmode="decimal" autocomplete="off"></div></div>
+      <div id="suBrWrap"><label class="fld" for="suBr">Brunch</label><div class="money"><span>$</span><input id="suBr" inputmode="decimal" autocomplete="off"></div></div>
+      <div id="suOtWrap"><label class="fld" for="suOt">Other meals</label><div class="money"><span>$</span><input id="suOt" inputmode="decimal" autocomplete="off"></div></div>
+    </div>
+  </section>
+
+  <section class="card susum" id="suSum"></section>
+  <div class="err-inline" id="suErr"></div>
+  <div class="setup-actions">
+    <button class="btn primary" id="suSave" type="submit">Save and start</button>
+    <button class="btn ghost" id="suCancel" type="button" hidden>Cancel</button>
+  </div>
+</form>
+</div>
+
+<div class="backdrop" id="backdrop" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shTitle">
+    <div class="shnav">
+      <button class="btn" id="shPrev" type="button">&#8249; Previous</button>
+      <button class="btn" id="shNext" type="button">Next &#8250;</button>
+    </div>
+    <h3 id="shTitle"></h3>
+    <div class="sh-sub" id="shSub"></div>
+    <div class="row inline">
+      <div><div style="font-weight:600">People eating</div><div class="sh-sub" style="margin:0" id="shEst"></div></div>
+      <div class="stepper"><button id="pMinus" aria-label="Fewer">&minus;</button><output id="pOut" class="num">2</output><button id="pPlus" aria-label="More">+</button></div>
+    </div>
+    <div class="row">
+      <div class="seg" role="tablist">
+        <button id="modeSpent" class="on">Amount spent</button>
+        <button id="modeLeft">Balance left after</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="money"><span>$</span><input id="amtIn" inputmode="decimal" autocomplete="off" placeholder="0.00"></div>
+      <div class="err-inline" id="amtErr"></div>
+    </div>
+    <div class="preview num" id="preview"></div>
+    <div class="actions">
+      <button class="btn primary" id="saveBtn">Log meal</button>
+      <button class="btn" id="skipBtn">Nobody ate</button>
+      <button class="btn" id="resetBtn">Default</button>
+      <button class="btn ghost" id="cancelBtn">Back</button>
+    </div>
+  </div>
+</div>
+
+
+
+<script src="config.js"></script>
+<script type="module">/*__APP__*/</script>
+</body>
+</html>
