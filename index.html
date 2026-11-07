@@ -401,7 +401,7 @@ const AppDetail = ({ appKey, onNavigate }) => {
       <div style={adS.divider}></div>
       <div>
         <h2 style={adS.h2}>{app.formTitle || 'Feedback & Feature Requests'}</h2>
-        <p style={adS.feedbackIntro}>Have an idea? Found a bug? I read every message.</p>
+        {!app.formTitle && <p style={adS.feedbackIntro}>Have an idea? Found a bug? I read every message.</p>}
         {formState.submitted ? (
           <div style={adS.successMsg}>
             <i data-lucide="check-circle" style={{ width:'20px', height:'20px', stroke:'#3A7D44', strokeWidth:'1.75', display:'block', flexShrink:0 }}></i>
