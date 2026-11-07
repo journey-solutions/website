@@ -37,16 +37,8 @@
   <input type="text" name="subject" />
   <textarea name="message"></textarea>
 </form>
-<form name="feedback-still" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
-  <input type="hidden" name="form-name" value="feedback-still" />
-  <input name="bot-field" />
-  <input type="text" name="app" />
-  <input type="text" name="name" />
-  <input type="email" name="email" />
-  <textarea name="message"></textarea>
-</form>
-<form name="feedback-payment-tracker" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
-  <input type="hidden" name="form-name" value="feedback-payment-tracker" />
+<form name="feedback-mhb" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+  <input type="hidden" name="form-name" value="feedback-mhb" />
   <input name="bot-field" />
   <input type="text" name="app" />
   <input type="text" name="name" />
@@ -130,7 +122,7 @@ const AppCard = ({ icon, category, title, description, tag, tagColor, onClick })
   return (
     <div onClick={onClick} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       style={{...acS.card, ...(hovered ? acS.cardHover : {}), cursor: onClick ? 'pointer' : 'default'}}>
-      <div style={{...acS.iconWrap, background: /\.(png|jpg|jpeg|svg|webp)$/i.test(icon) ? 'transparent' : (tagColor === 'amber' ? '#EA8724' : '#540608'), padding: /\.(png|jpg|jpeg|svg|webp)$/i.test(icon) ? 0 : undefined, width: /\.(png|jpg|jpeg|svg|webp)$/i.test(icon) ? '52px' : '44px', height: /\.(png|jpg|jpeg|svg|webp)$/i.test(icon) ? '52px' : '44px', overflow: 'hidden'}}>
+      <div style={{...acS.iconWrap, background: /\.(png|jpg|jpeg|svg|webp)$/i.test(icon) ? 'transparent' : (tagColor === 'amber' ? '#EA8724' : '#540608'), padding: /\.(png|jpg|jpeg|svg|webp)$/i.test(icon) ? 0 : undefined, width: /\.(png|jpg|jpeg|svg|webp)$/i.test(icon) ? '52px' : '44px', height: /\.(png|jpg|jpeg|svg|webp)$/i.test(icon) ? '52px' : '44px', borderRadius: /\.(png|jpg|jpeg|svg|webp)$/i.test(icon) ? '22%' : '50%', overflow: 'hidden'}}>
         {/\.(png|jpg|jpeg|svg|webp)$/i.test(icon)
           ? <img src={icon} alt="" style={{width:'100%', height:'100%', objectFit:'cover', display:'block'}} />
           : <i data-lucide={icon} style={{...acS.icon, stroke: tagColor === 'amber' ? '#540608' : '#EA8724'}}></i>}
@@ -184,8 +176,7 @@ const HeroSection = ({ onNavigate }) => {
       <div style={hS.stripLabel}>Featured Apps</div>
       <div style={{...hS.stripCards, ...(isMobile ? hS.stripCardsMobile : {})}}>
         {[
-          { icon:'still-icon.png',            category:'Meditation', title:'Still',           description:'A gentle habit starter for daily meditation. Build a practice that actually sticks.', tag:null, tagColor:null },
-          { icon:'payment-tracker-icon.png',  category:'Finance',    title:'Payment Tracker', description:'Track loan payments with clarity. See what you owe, what you\'ve paid, and when you\'ll be done.', tag:null, tagColor:null },
+          { icon:'mhb-icon.png',              category:'Meditation', title:'Meditation Habit Builder', description:'A gentle habit starter for daily meditation. Build a practice that actually sticks.', tag:null, tagColor:null },
           { icon:'tent',                      category:'Events',     title:'Rally Manager',   description:'Manage registrations for camping events and rallies — without the spreadsheet chaos.', tag:null, tagColor:null },
         ].map((app, i) => <AppCard key={i} {...app} onClick={() => onNavigate('appdetail', app.title)} />)}
       </div>
@@ -212,7 +203,7 @@ const hS = {
   strip: { borderTop:'1px solid #E2D8CC', padding:'32px 48px 48px', background:'#FFFFFF' },
   stripMobile: { padding:'28px 22px 36px' },
   stripLabel: { fontFamily:"'Oswald', sans-serif", fontSize:'11px', letterSpacing:'0.15em', textTransform:'uppercase', color:'#A99080', marginBottom:'20px' },
-  stripCards: { display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:'16px' },
+  stripCards: { display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(260px, 1fr))', gap:'16px' },
   stripCardsMobile: { gridTemplateColumns:'1fr', gap:'14px' },
 };
 
@@ -232,13 +223,13 @@ const AboutSection = () => {
         </div>
         <div style={abS.photoCaption}>Journey Solutions Founder</div>
         <div style={abS.statRow}>
-          <div style={abS.stat}><span style={abS.statNum}>3</span><span style={abS.statLabel}>Apps Built</span></div>
+          <div style={abS.stat}><span style={abS.statNum}>2</span><span style={abS.statLabel}>Apps Built</span></div>
           <div style={abS.stat}><span style={abS.statNum}>Growing</span><span style={abS.statLabel}>Catalog</span></div>
         </div>
       </div>
       <div style={abS.textCol}>
         <p style={abS.p}>I didn't start out as a developer. I started out as someone who couldn't find the tools I needed — so I learned to build them myself.</p>
-        <p style={abS.p}>Every app in this collection grew out of a real problem I faced. Still came from wanting a simpler way to build a meditation habit. Payment Tracker from needing to see loan progress at a glance. Rally Manager from organizing camping events and drowning in spreadsheets.</p>
+        <p style={abS.p}>Every app in this collection grew out of a real problem I faced. Meditation Habit Builder came from wanting a simpler way to build a meditation habit. Rally Manager came from organizing camping events and drowning in spreadsheets.</p>
         <p style={abS.p}>I believe software should be simple, honest, and respectful of your time. No dark patterns, no endless feature bloat, no subscription traps.</p>
         <blockquote style={abS.quote}>"I read every message and feature request. This isn't a faceless product — it's something I'm genuinely proud of."</blockquote>
         <p style={abS.p}>Thanks for stopping by. I hope something here makes your day a little easier.</p>
@@ -272,8 +263,7 @@ const abS = {
 
 /* ── APPS ── */
 const APPS_DATA = [
-  { icon:'still-icon.png',            category:'Meditation', title:'Still',           description:'A gentle habit starter for daily meditation. Build a practice that actually sticks — one quiet moment at a time.', tag:null, tagColor:null },
-  { icon:'payment-tracker-icon.png',  category:'Finance',    title:'Payment Tracker', description:'Track loan payments with clarity. See what you owe, what you\'ve paid, and when you\'ll be done.', tag:null, tagColor:null },
+  { icon:'mhb-icon.png',              category:'Meditation', title:'Meditation Habit Builder', description:'A gentle habit starter for daily meditation. Build a practice that actually sticks — one quiet moment at a time.', tag:null, tagColor:null },
   { icon:'tent',                      category:'Events',     title:'Rally Manager',   description:'Manage registrations for camping events and rallies. Keep attendees organized without the spreadsheet chaos.', tag:null, tagColor:null },
 ];
 const AppsSection = ({ onNavigate }) => {
@@ -299,31 +289,27 @@ const apS = {
   h1: { fontFamily:"'Oswald', sans-serif", fontSize:'46px', fontWeight:'700', textTransform:'uppercase', letterSpacing:'0.04em', color:'#540608', lineHeight:'1.05', marginBottom:'12px' },
   h1Mobile: { fontSize:'32px' },
   lead: { fontFamily:"'Lora', serif", fontSize:'16px', color:'#6B5744', lineHeight:'1.65', maxWidth:'480px' },
-  grid: { display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:'18px' },
+  grid: { display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(260px, 1fr))', gap:'18px' },
   gridMobile: { gridTemplateColumns:'1fr', gap:'14px' },
 };
 
 /* ── APP DETAIL DATA ── */
 const APP_DETAILS = {
-  'Still': {
-    iconType:'img', icon:'still-icon.png', category:'Meditation', title:'Still', shot:'still',
-    desc:"A gentle habit starter for daily meditation. Still was built for anyone who's tried to meditate and given up — because most apps make it too complicated. This one just asks you to show up.",
+  'Meditation Habit Builder': {
+    slug:'mhb', iconType:'img', icon:'mhb-icon.png', category:'Meditation', title:'Meditation Habit Builder', shot:'mhb', bareShots:true, comingSoon:true,
+    desc:"A gentle habit starter for daily meditation. Meditation Habit Builder was built for anyone who's tried to meditate and given up — because most apps make it too complicated. This one just asks you to show up.",
     steps:['Open the app and choose your session length — even 2 minutes counts.','Tap Start and follow the gentle audio cues.','After each session, mark it complete to build your streak.','Review your history in the Calendar view.','Adjust reminders in Settings to fit your schedule.'],
   },
-  'Payment Tracker': {
-    iconType:'img', icon:'payment-tracker-icon.png', category:'Finance', title:'Payment Tracker', shot:'payment-tracker',
-    desc:"Track loan payments with clarity. Payment Tracker shows you exactly what you owe, what you've already paid, and the date you'll finally be done — no spreadsheets, no guesswork.",
-    steps:['Add a loan with its balance, interest rate, and monthly payment.','Log each payment as you make it.','Watch your remaining balance and payoff date update automatically.','Switch to the timeline view to see your progress at a glance.','Set reminders so you never miss a due date.'],
-  },
   'Rally Manager': {
-    iconType:'lucide', icon:'tent', category:'Events', title:'Rally Manager', shot:'rally-manager',
+    iconType:'lucide', icon:'tent', category:'Events', title:'Rally Manager', shot:'rally-manager', slug:'rally-manager', formTitle:'Build one for me',
+    note:'If you would like to discuss how you can get a customer built solution of the Rally Manager for your group please use the contact form below.',
     desc:"Manage registrations for camping events and rallies without the spreadsheet chaos. Rally Manager keeps your attendees, sign-ups, and check-ins organized in one calm place.",
     steps:['Create an event with dates, location, and capacity.','Share the registration link with your attendees.','Review and approve registrations as they come in.','Track who has checked in from the attendee list.','Export the roster whenever you need a printable copy.'],
   },
 };
 
 /* ── DEVICE SHOT (upload-ready screenshot frame) ── */
-const DeviceShot = ({ kind, filename }) => {
+const DeviceShot = ({ kind, filename, aspect }) => {
   const [err, setErr] = React.useState(false);
   React.useEffect(() => { if (err && window.lucide) window.lucide.createIcons(); }, [err]);
   const isPhone = kind === 'phone';
@@ -333,7 +319,7 @@ const DeviceShot = ({ kind, filename }) => {
   return (
     <div style={{...frameBase, ...(isMobile ? frameMobile : {})}}>
       {isPhone && <div style={adS.notch}></div>}
-      <div style={isPhone ? adS.phoneScreen : adS.tabletScreen}>
+      <div style={isPhone ? adS.phoneScreen : {...adS.tabletScreen, ...(aspect ? { aspectRatio: aspect } : {})}}>
         {!err
           ? <img src={filename} alt="" onError={() => setErr(true)} style={adS.shotImg} />
           : <div style={adS.shotPlaceholder}>
@@ -348,7 +334,7 @@ const DeviceShot = ({ kind, filename }) => {
 
 /* ── APP DETAIL ── */
 const AppDetail = ({ appKey, onNavigate }) => {
-  const app = APP_DETAILS[appKey] || APP_DETAILS['Still'];
+  const app = APP_DETAILS[appKey] || APP_DETAILS['Meditation Habit Builder'];
   const [formState, setFormState] = React.useState({ submitted:false });
   const isMobile = useIsMobile();
   React.useEffect(() => { if (window.lucide) window.lucide.createIcons(); }, [appKey]);
@@ -360,7 +346,7 @@ const AppDetail = ({ appKey, onNavigate }) => {
       </button>
       <div style={adS.hero}>
         {app.iconType === 'img'
-          ? <div style={{...adS.heroIcon, background:'transparent', overflow:'hidden', padding:0}}>
+          ? <div style={{...adS.heroIcon, background:'transparent', overflow:'hidden', padding:0, borderRadius:'22%'}}>
               <img src={app.icon} alt="" style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
             </div>
           : <div style={adS.heroIcon}>
@@ -376,12 +362,29 @@ const AppDetail = ({ appKey, onNavigate }) => {
       <div style={adS.shotsSection}>
         <h2 style={adS.h2}>Screenshots</h2>
         <div style={{...adS.shotsPanel, ...(isMobile ? adS.shotsPanelMobile : {})}}>
-          <DeviceShot kind="tablet" filename={app.shot + '-tablet.png'} />
-          <DeviceShot kind="phone" filename={app.shot + '-phone.png'} />
+          {app.bareShots ? (
+            <>
+              <img src={app.shot + '-tablet.png'} alt={app.title + ' tablet screenshot'} style={{...adS.bareShot, ...(isMobile ? adS.bareShotMobile : { width:'520px', maxWidth:'58%' })}} />
+              <img src={app.shot + '-phone.png'} alt={app.title + ' phone screenshot'} style={{...adS.bareShot, ...(isMobile ? adS.bareShotMobile : { width:'190px', maxWidth:'26%' })}} />
+            </>
+          ) : (
+            <>
+              <DeviceShot kind="tablet" filename={app.shot + '-tablet.png'} aspect={app.tabletAspect} />
+              <DeviceShot kind="phone" filename={app.shot + '-phone.png'} />
+            </>
+          )}
         </div>
       </div>
       <div style={adS.divider}></div>
       <div style={adS.howto}>
+        {app.comingSoon && (
+          <div style={adS.soonRow}>
+            <span style={adS.soonText}>Available soon for</span>
+            <img src="android-logo.svg" alt="Android" style={adS.soonLogo} />
+            <img src="apple-logo.svg" alt="Apple" style={adS.soonLogo} />
+          </div>
+        )}
+        {app.note && <p style={adS.noteText}>{app.note}</p>}
         <h2 style={adS.h2}>How to Use</h2>
         <ol style={adS.steps}>
           {app.steps.map((step, i) => (
@@ -397,7 +400,7 @@ const AppDetail = ({ appKey, onNavigate }) => {
       </div>
       <div style={adS.divider}></div>
       <div>
-        <h2 style={adS.h2}>Feedback & Feature Requests</h2>
+        <h2 style={adS.h2}>{app.formTitle || 'Feedback & Feature Requests'}</h2>
         <p style={adS.feedbackIntro}>Have an idea? Found a bug? I read every message.</p>
         {formState.submitted ? (
           <div style={adS.successMsg}>
@@ -425,7 +428,7 @@ const adS = {
   wrap: { padding:'40px 48px' },
   wrapMobile: { padding:'28px 22px 40px' },
   shotsSection: { marginBottom:'8px' },
-  shotsPanel: { display:'flex', alignItems:'center', justifyContent:'center', gap:'0', padding:'48px 32px', background:'linear-gradient(135deg, #FBF4EC 0%, #F3E5D9 100%)', border:'1px solid #E2D8CC', borderRadius:'16px', marginTop:'2px', minHeight:'340px', flexWrap:'wrap' },
+  shotsPanel: { display:'flex', alignItems:'center', justifyContent:'center', gap:'28px', padding:'48px 32px', background:'linear-gradient(135deg, #FBF4EC 0%, #F3E5D9 100%)', border:'1px solid #E2D8CC', borderRadius:'16px', marginTop:'2px', minHeight:'340px', flexWrap:'wrap' },
   shotsPanelMobile: { flexDirection:'column', gap:'28px', padding:'32px 18px', minHeight:'auto' },
   tabletFrame: { position:'relative', width:'400px', maxWidth:'58%', background:'#1A1008', borderRadius:'20px', padding:'14px', boxShadow:'0 20px 44px rgba(84,6,8,0.18)', flexShrink:0, zIndex:1 },
   tabletFrameMobile: { width:'100%', maxWidth:'320px', marginLeft:'0' },
@@ -449,6 +452,12 @@ const adS = {
   desc: { fontFamily:"'Lora', serif", fontSize:'15px', color:'#1A1008', lineHeight:'1.75', maxWidth:'580px', marginBottom:'28px' },
   divider: { borderTop:'1px solid #E2D8CC', margin:'28px 0' },
   howto: { marginBottom:'8px' },
+  bareShot: { height:'auto', display:'block', borderRadius:'14px', boxShadow:'0 14px 36px rgba(84,6,8,0.16)' },
+  bareShotMobile: { width:'100%', maxWidth:'320px' },
+  soonRow: { display:'flex', alignItems:'center', gap:'14px', marginBottom:'22px' },
+  soonText: { fontFamily:"'Oswald', sans-serif", fontSize:'13px', fontWeight:'600', letterSpacing:'0.1em', textTransform:'uppercase', color:'#6B5744' },
+  soonLogo: { height:'24px', width:'auto', display:'block' },
+  noteText: { fontFamily:"'Lora', serif", fontSize:'15px', color:'#1A1008', lineHeight:'1.75', maxWidth:'580px', marginBottom:'22px' },
   h2: { fontFamily:"'Oswald', sans-serif", fontSize:'26px', fontWeight:'600', textTransform:'uppercase', letterSpacing:'0.05em', color:'#540608', marginBottom:'18px' },
   steps: { listStyle:'none', display:'flex', flexDirection:'column', gap:'10px', paddingLeft:'0' },
   step: { display:'flex', alignItems:'flex-start', gap:'12px' },
@@ -547,9 +556,9 @@ const cfS = {
 /* ── APP ── */
 const App = () => {
   const initApp = (() => { try { return new URLSearchParams(window.location.search).get('app'); } catch(e){ return null; } })();
-  const validInit = initApp && APP_DETAILS[initApp] ? initApp : null;
+  const validInit = initApp ? (Object.keys(APP_DETAILS).find(k => k === initApp || APP_DETAILS[k].slug === initApp.toLowerCase()) || null) : null;
   const [page, setPage] = React.useState(validInit ? 'appdetail' : 'main');
-  const [detailApp, setDetailApp] = React.useState(validInit || 'Still');
+  const [detailApp, setDetailApp] = React.useState(validInit || 'Meditation Habit Builder');
   const isMobile = useIsMobile();
   React.useEffect(() => { if (window.lucide) window.lucide.createIcons(); });
   const navigate = (p, app) => { if (app) setDetailApp(app); setPage(p); window.scrollTo(0,0); const sc = document.getElementById('scrollArea'); if (sc) sc.scrollTop = 0; };
