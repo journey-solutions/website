@@ -556,12 +556,21 @@ const cfS = {
 /* ── APP ── */
 const App = () => {
   const initApp = (() => { try { return new URLSearchParams(window.location.search).get('app'); } catch(e){ return null; } })();
-  const validInit = initApp ? (Object.keys(APP_DETAILS).find(k => k === initApp || APP_DETAILS[k].slug === initApp.toLowerCase()) || null) : null;
-  const [page, setPage] = React.useState(validInit ? 'appdetail' : 'main');
+  const initPage = (() => { try { return new URLSearchParams(window.location.search).get('page'); } catch(e){ return null; } })();
+  const validInit = initApp ? (Object.keys(APP_DETAILS).find(k => k === initApp || APP_DETAILS[k].slug === initApp.toLowerCase()) || (initApp.toLowerCase() === 'still' ? 'Meditation Habit Builder' : null)) : null;
+  const [page, setPage] = React.useState(validInit ? 'appdetail' : (['about','apps','contact'].includes(initPage) ? initPage : 'main'));
   const [detailApp, setDetailApp] = React.useState(validInit || 'Meditation Habit Builder');
   const isMobile = useIsMobile();
   React.useEffect(() => { if (window.lucide) window.lucide.createIcons(); });
-  const navigate = (p, app) => { if (app) setDetailApp(app); setPage(p); window.scrollTo(0,0); const sc = document.getElementById('scrollArea'); if (sc) sc.scrollTop = 0; };
+  const syncUrl = (p, appKey) => {
+    try {
+      const d = APP_DETAILS[appKey];
+      const q = p === 'appdetail' ? '?app=' + encodeURIComponent((d && d.slug) || appKey) : (p === 'main' ? '' : '?page=' + p);
+      window.history.replaceState(null, '', window.location.pathname + q);
+    } catch(e) {}
+  };
+  React.useEffect(() => { syncUrl(page, detailApp); }, []);
+  const navigate = (p, app) => { if (app) setDetailApp(app); setPage(p); syncUrl(p, app || detailApp); window.scrollTo(0,0); const sc = document.getElementById('scrollArea'); if (sc) sc.scrollTop = 0; };
   const renderPage = () => {
     switch(page) {
       case 'main':      return <HeroSection onNavigate={navigate} />;
